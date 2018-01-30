@@ -1,6 +1,6 @@
 {
   "name": "tipshare",
-  "app_id": "",
+  "app_id": "cd95fa82",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}
