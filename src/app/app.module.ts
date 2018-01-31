@@ -11,6 +11,9 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { SQLite } from "@ionic-native/sqlite";
+import {DbService} from "../services/db.service";
+import {CriteriaService} from "../services/criteria.service";
+import {WaiterService} from "../services/waiter.service";
 
 @NgModule({
   declarations: [
@@ -36,6 +39,9 @@ import { SQLite } from "@ionic-native/sqlite";
     StatusBar,
     SplashScreen,
     SQLite,
+    DbService,
+    CriteriaService,
+    WaiterService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

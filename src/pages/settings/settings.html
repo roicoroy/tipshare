@@ -6,15 +6,14 @@
 
 <ion-content>
   <ion-list>
-    <ion-item>
-      <ion-icon name="pie" item-start></ion-icon>
-      Sharing Criteria
-      <ion-icon name="arrow-forward" item-end></ion-icon>
-    </ion-item>
-    <ion-item>
-      <ion-icon name="people" item-start></ion-icon>
-      Waiters
-      <ion-icon name="arrow-forward" item-end></ion-icon>
-    </ion-item>
+    <button ion-item><ion-icon name="pie" item-start></ion-icon>Sharing Criteria ({{ criteria.length }})</button>
+    <button ion-item><ion-icon name="people" item-start></ion-icon>Waiters ({{ waiters.length }})</button>
   </ion-list>
+  <ion-content padding *ngIf="error.length > 0">
+    <h3>Errors:</h3>
+    <ul *ngFor="let e of error">
+      <li>{{ e }}</li>
+    </ul>
+  </ion-content>
+
 </ion-content>
