@@ -1,5 +1,5 @@
 export class Criteria {
-  constructor(criteriaId:number,
-              description: string,
-              points: number) {}
+  constructor(public criteriaId:number,
+              public description: string,
+              public points: number) {}
 }

@@ -33,7 +33,44 @@ export class CriteriaService {
             //Return criteria array (populated or empty) to any subscribers
             observer.next(criteria);
             observer.complete();
-          })
+          });
+      }, connErr => {
+        observer.error(new Error(`Unable to connect to database ${connErr}`));
+        observer.complete();
+      });
+    });
+  }
+
+  public delete(criteria: Criteria) : Observable<Criteria> {
+    return Observable.create(observer => {
+      this.db.connectDb().subscribe(cn => {
+        cn.executeSql('DELETE FROM CRITERIA WHERE CriteriaID = ?', {params: [criteria.criteriaId]})
+          .then(success => {
+            observer.next(criteria);
+            observer.complete();
+          }).catch(error => {
+            observer.error(new Error(error.message));
+            observer.complete();
+          });
+      }, connErr => {
+        observer.error(new Error(`Unable to connect to database ${connErr}`));
+        observer.complete();
+      });
+    });
+  }
+
+  public add(criteria:Criteria) : Observable<Criteria> {
+    return Observable.create(observer => {
+      this.db.connectDb().subscribe(cn => {
+        cn.executeSql(`INSERT INTO CRITERIA (Description, Points) VALUES (?,?);`,
+          { params: [criteria.description, criteria.points]})
+          .then(success => {
+            observer.next(criteria);
+            observer.complete();
+          }).catch(error => {
+          observer.error(new Error(error.message));
+          observer.complete();
+        });
       }, connErr => {
         observer.error(new Error(`Unable to connect to database ${connErr}`));
         observer.complete();
