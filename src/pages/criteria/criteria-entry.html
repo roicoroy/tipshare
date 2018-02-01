@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Criteria Edit</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="criteriaFormGroup" (ngSubmit)="saveCriteria()">
+    <ion-item>
+      <ion-label stacked>Criteria name</ion-label>
+      <ion-input type="text" formControlName="name" placeholder="e.g. Long service"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label stacked>Description</ion-label>
+      <ion-textarea type="text" formControlName="description" placeholder="e.g. Waiter has served for more than 5 years"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-range min="0.5" max="10" color="secondary">
+        <ion-label range-left>0.5</ion-label>
+        <ion-label range-right>10</ion-label>
+      </ion-range>
+    </ion-item>
+    <button ion-button type="submit">Add</button>
+  </form>
+</ion-content>

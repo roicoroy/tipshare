@@ -14,6 +14,8 @@ import { SQLite } from "@ionic-native/sqlite";
 import {DbService} from "../services/db.service";
 import {CriteriaService} from "../services/criteria.service";
 import {WaiterService} from "../services/waiter.service";
+import {CriteriaPage} from "../pages/criteria/criteria";
+import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import {WaiterService} from "../services/waiter.service";
     TipsPage,
     SharingPage,
     SettingsPage,
+    CriteriaPage,
+    CriteriaEntryPage,
     TabsPage
   ],
   imports: [
@@ -33,6 +37,8 @@ import {WaiterService} from "../services/waiter.service";
     TipsPage,
     SharingPage,
     SettingsPage,
+    CriteriaPage,
+    CriteriaEntryPage,
     TabsPage
   ],
   providers: [

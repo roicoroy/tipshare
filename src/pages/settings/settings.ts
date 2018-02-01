@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {CriteriaService} from "../../services/criteria.service";
-import {Criteria} from "../../types/criteria";
 import {WaiterService} from "../../services/waiter.service";
-import {Waiter} from "../../types/waiter";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {DbService} from "../../services/db.service";
+import {CriteriaPage} from "../criteria/criteria";
 
 @Component({
   selector: 'page-settings',
@@ -11,21 +12,19 @@ import {Waiter} from "../../types/waiter";
 })
 export class SettingsPage {
 
-  public criteria:Criteria[] = [];
-  public waiters: Waiter[] = [];
-  public error: string[] = [];
+  constructor(public navCtrl: NavController,
+              private criteriaService: CriteriaService,
+              private waiterService: WaiterService,
+              private formBuilder: FormBuilder,
+              private db: DbService) {}
 
-  constructor(public navCtrl: NavController
-              , private criteriaService: CriteriaService
-              , private waiterService: WaiterService) {
-          this.criteriaService.get()
-            .subscribe((criteria) => this.criteria = criteria, (err) => this.error.push(err));
+  gotoCriteriaPage() {
+    console.log('Pushed');
+    this.navCtrl.push(CriteriaPage);
+  }
 
-          this.waiterService.get()
-            .subscribe((data) => this.waiters = data, (err) => this.error.push(err));
-    }
-
-
-
+  resetDb() {
+    this.db.resetDb().subscribe(ok => console.log(ok), error => console.log(error.message));
+  }
 
 }

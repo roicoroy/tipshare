@@ -26,6 +26,7 @@ export class CriteriaService {
             if(data.rows.length > 0) {
               for(let i = 0; i < data.rows.length; i++) {
                 criteria.push(new Criteria(data.rows.item(i).CriteriaID
+                                          , data.rows.item(i).Name
                                           , data.rows.item(i).Description
                                           , data.rows.item(i).Points));
               }
@@ -44,7 +45,8 @@ export class CriteriaService {
   public delete(criteria: Criteria) : Observable<Criteria> {
     return Observable.create(observer => {
       this.db.connectDb().subscribe(cn => {
-        cn.executeSql('DELETE FROM CRITERIA WHERE CriteriaID = ?', {params: [criteria.criteriaId]})
+        cn.executeSql(`DELETE FROM CRITERIA WHERE Description LIKE '?'` ,
+                  [criteria.description])
           .then(success => {
             observer.next(criteria);
             observer.complete();
@@ -63,7 +65,7 @@ export class CriteriaService {
     return Observable.create(observer => {
       this.db.connectDb().subscribe(cn => {
         cn.executeSql(`INSERT INTO CRITERIA (Description, Points) VALUES (?,?);`,
-          { params: [criteria.description, criteria.points]})
+           [criteria.description, criteria.points] )
           .then(success => {
             observer.next(criteria);
             observer.complete();

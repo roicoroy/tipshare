@@ -6,14 +6,8 @@
 
 <ion-content>
   <ion-list>
-    <button ion-item><ion-icon name="pie" item-start></ion-icon>Sharing Criteria ({{ criteria.length }})</button>
-    <button ion-item><ion-icon name="people" item-start></ion-icon>Waiters ({{ waiters.length }})</button>
+    <button ion-item (click)="gotoCriteriaPage()"><ion-icon name="pie" item-start></ion-icon>Sharing Criteria</button>
+    <button ion-item><ion-icon name="people" item-start></ion-icon>Waiters</button>
+    <button ion-item (click)="resetDb()"><ion-icon name="trash" item-start></ion-icon>Delete all data</button>
   </ion-list>
-  <ion-content padding *ngIf="error.length > 0">
-    <h3>Errors:</h3>
-    <ul *ngFor="let e of error">
-      <li>{{ e }}</li>
-    </ul>
-  </ion-content>
-
 </ion-content>
