@@ -1,7 +1,6 @@
 import {Component} from "@angular/core";
 import {WaiterService} from "../../services/waiter.service";
 import {NavController} from "ionic-angular";
-import {FormBuilder, FormGroup} from "@angular/forms";
 import {Waiter} from "../../types/waiter";
 import { WaiterEntryPage } from "./waiter-entry";
 
@@ -13,13 +12,13 @@ export class WaitersPage {
 
     private waiters:Array<Waiter> = [];
 
-    constructor(public navController:NavController, 
+    constructor(public navController:NavController,
         private waiterService: WaiterService) {}
 
     ionViewDidLoad() {
         this._getWaiters();
         }
-    
+
     ionViewWillEnter() {
     this._getWaiters();
     }
@@ -36,7 +35,7 @@ export class WaitersPage {
     public addWaiterTapped() {
         this.navController.push(WaiterEntryPage);
       }
-    
+
       public editWaiterTapped(waiter: Waiter) {
         this.navController.push(WaiterEntryPage, { waiter: waiter });
       }

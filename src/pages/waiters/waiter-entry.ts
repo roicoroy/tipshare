@@ -5,6 +5,7 @@ import {WaiterService} from "../../services/waiter.service";
 import { Waiter } from "../../types/waiter";
 import { Criteria } from "../../types/criteria";
 import { CriteriaService } from "../../services/criteria.service";
+import {ErrorService} from "../../services/error.service";
 
 @Component({
   selector: 'page-waiter-entry',
@@ -19,8 +20,9 @@ export class WaiterEntryPage {
     constructor(private navCtrl: NavController,
         private navParams: NavParams,
         private formBuilder: FormBuilder,
-        private waiterService: WaiterService, 
-        private criteriaService: CriteriaService) {
+        private waiterService: WaiterService,
+        private criteriaService: CriteriaService,
+        private errorService: ErrorService) {
 
         //Get form ready for new waiter
         this.myForm = this.formBuilder.group({
@@ -48,31 +50,27 @@ export class WaiterEntryPage {
         //Check to see if this is editing an existing waiter and if so update
         if(this.editWaiter) {
           waiter.waiterId = this.editWaiter.waiterId;
-          this.waiterService.update(waiter).subscribe(success => {
+          this.waiterService.update(waiter).subscribe(() => {
             this.navCtrl.pop();
-            console.info(`Waiter updated: ${JSON.stringify(success)}`);
-          }, failure => {
-            console.log(failure.message);
-            //TODO - handle errors
+          }, error => {
+            this.errorService.handleError(error);
           });
         } else {
           //If not editing, add a new waiter
-          this.waiterService.add(waiter).subscribe(success => {
+          this.waiterService.add(waiter).subscribe(() => {
             this.navCtrl.pop();
-            console.info(`waiter updated: ${JSON.stringify(success)}`);
-          }, failure => {
-            console.log(failure.message);
-            //TODO - handle error
+          }, error => {
+            this.errorService.handleError(error);
           });
         }
-    
+
       }
 
       private getCriteria() {
-        this.criteriaService.get().subscribe(sucess => {
-          this.criteriaOptions = sucess;
-        }, failure => {
-          console.log();
+        this.criteriaService.get().subscribe(success => {
+          this.criteriaOptions = success;
+        }, error => {
+          this.errorService.handleError(error);
         });
       }
 

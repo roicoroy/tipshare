@@ -1,11 +1,9 @@
 import {Component} from "@angular/core";
-import {WaiterService} from "../../services/waiter.service";
 import {NavController} from "ionic-angular";
 import {CriteriaService} from "../../services/criteria.service";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {DbService} from "../../services/db.service";
 import {Criteria} from "../../types/criteria";
 import {CriteriaEntryPage} from "./criteria-entry";
+import {ErrorService} from "../../services/error.service";
 
 @Component({
   selector: 'page-criteria',
@@ -16,8 +14,8 @@ export class CriteriaPage {
   private criteria:Array<Criteria> = [];
 
   constructor(public navCtrl: NavController,
-              private criteriaService: CriteriaService) {
-  }
+              private criteriaService: CriteriaService,
+              private errorService: ErrorService) {}
 
   ionViewDidLoad() {
     this._getCriteria();
@@ -31,8 +29,7 @@ export class CriteriaPage {
     this.criteriaService.get().subscribe(success => {
       this.criteria = success;
     }, error => {
-      console.log('error.message');
-      //TODO handle error
+      this.errorService.handleError(error);
     });
   }
 
@@ -44,11 +41,11 @@ export class CriteriaPage {
     this.navCtrl.push(CriteriaEntryPage, { criteria: criteria });
   }
   public deleteCriteriaTapped(criteria: Criteria) {
-    this.criteriaService.delete(criteria).subscribe(deleted => {
+    this.criteriaService.delete(criteria).subscribe(() => {
       this._getCriteria();
     }, error => {
       console.log(error.message);
-      //TODO handle error
+      this.errorService.handleError(error);
     });
   }
 }
