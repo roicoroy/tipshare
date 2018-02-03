@@ -57,7 +57,18 @@ export class DbService {
                                                             NOT NULL,
                                         FirstName TEXT (50) NOT NULL,
                                         LastName  TEXT (50) NOT NULL
-                                    );`];
+                                    );`,
+                            `CREATE TABLE IF NOT EXISTS WAITER_CRITERIA (
+                                WaiterID   INTEGER REFERENCES WAITER (WaiterID) ON DELETE CASCADE
+                                                                                ON UPDATE CASCADE
+                                                                                NOT NULL,
+                                CriteriaID INTEGER REFERENCES CRITERIA (CriteriaID) ON DELETE CASCADE
+                                                                                    ON UPDATE CASCADE
+                                                                                    NOT NULL,
+                                PRIMARY KEY (
+                                    WaiterID,
+                                    CriteriaID
+                                ));`];
         //
         db.sqlBatch(dbSetupSql)
           .then(success => {
@@ -82,7 +93,9 @@ export class DbService {
   public resetDb () : Observable<String> {
     return Observable.create(observer => {
       this.connectDb().subscribe(cn => {
-        cn.sqlBatch([`DROP TABLE IF EXISTS CRITERIA;`, `DROP TABLE IF EXISTS WAITER;`])
+        cn.sqlBatch([`DROP TABLE IF EXISTS CRITERIA;`,
+          `DROP TABLE IF EXISTS WAITER;`,
+          `DROP TABLE IF EXISTS WAITER_CRITERIA;`])
           .then(deleted => {
             this.initializeDb().subscribe(ok => {
               observer.next('All tables reset');
