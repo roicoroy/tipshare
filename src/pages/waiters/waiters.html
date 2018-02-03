@@ -11,7 +11,7 @@
   <ion-content>
     <ion-list>
       <ion-item-sliding *ngFor="let item of waiters">
-        <ion-item>{{ item.firstName }}<ion-badge color="secondary" item-end>{{ item.lastName }}</ion-badge></ion-item>
+        <ion-item>{{ item.firstName }} {{ item.lastName }}</ion-item>
   
         <ion-item-options side="right">
           <button ion-button icon-only color="secondary" (click)="editWaiterTapped(item)"><ion-icon name="open"></ion-icon></button>

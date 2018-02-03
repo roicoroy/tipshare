@@ -2,7 +2,6 @@ import {Component} from "@angular/core";
 import {WaiterService} from "../../services/waiter.service";
 import {NavController} from "ionic-angular";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {DbService} from "../../services/db.service";
 import {Waiter} from "../../types/waiter";
 import { WaiterEntryPage } from "./waiter-entry";
 
