@@ -18,6 +18,7 @@ import {CriteriaPage} from "../pages/criteria/criteria";
 import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
 import { WaitersPage } from '../pages/waiters/waiters';
 import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
+import {ErrorService} from "../services/error.service";
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
     DbService,
     CriteriaService,
     WaiterService,
+    ErrorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

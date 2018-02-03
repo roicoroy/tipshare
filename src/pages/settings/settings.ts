@@ -3,6 +3,7 @@ import {NavController} from 'ionic-angular';
 import {DbService} from "../../services/db.service";
 import {CriteriaPage} from "../criteria/criteria";
 import { WaitersPage } from '../waiters/waiters';
+import {ErrorService} from "../../services/error.service";
 
 @Component({
   selector: 'page-settings',
@@ -11,7 +12,8 @@ import { WaitersPage } from '../waiters/waiters';
 export class SettingsPage {
 
   constructor(public navCtrl: NavController,
-              private db: DbService) {}
+              private db: DbService,
+              private errorService: ErrorService) {}
 
   gotoCriteriaPage() {
     this.navCtrl.push(CriteriaPage);
@@ -22,7 +24,7 @@ export class SettingsPage {
   }
 
   resetDb() {
-    this.db.resetDb().subscribe(ok => console.log(ok), error => console.log(error.message));
+    this.db.resetDb().subscribe(ok => console.log(ok), error => this.errorService.handleError(error));
   }
 
 }

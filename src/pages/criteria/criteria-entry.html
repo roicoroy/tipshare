@@ -31,9 +31,9 @@
           ? 'Points'
           : 'Points (number between 0.5 and 10)' }}
         </ion-label>
-        <ion-input type="text" formControlName="points" placeholder="e.g. 1.5"></ion-input>
+        <ion-input type="number" min="0" max="10" formControlName="points" placeholder="e.g. 1.5"></ion-input>
       </ion-item>
 
-      <button ion-button type="submit" float-right margin>Save</button>
+      <button ion-button type="submit" [disabled]="!myForm.valid" float-right margin>Save</button>
   </form>
 </ion-content>
