@@ -6,6 +6,8 @@ import {Platform} from "ionic-angular";
 @Injectable()
 export class DbService {
 
+  public db:SQLiteObject = null;
+
   constructor(private sqlite: SQLite,
               private platform: Platform) {}
 
@@ -19,16 +21,23 @@ export class DbService {
     }
 
     return Observable.create(observer => {
-      this.sqlite.create(dbObj)
-        .then(connection => {
-          observer.next(connection);
-          observer.complete();
-        })
-        .catch(error => {
-          observer.error(new Error(`Database connection failed: ${error}`));
-          observer.complete();
-        });
+      if(this.db) {
+        observer.next(this.db);
+        observer.complete();
+      } else {
+        this.sqlite.create(dbObj)
+          .then(connection => {
+            this.db = connection;
+            observer.next(this.db);
+            observer.complete();
+          })
+          .catch(error => {
+            observer.error(new Error(`Database connection failed: ${error}`));
+            observer.complete();
+          });
+      }
     });
+
   }
 
   public initializeDb() : Observable<string> {
@@ -40,7 +49,8 @@ export class DbService {
         let dbSetupSql = [`CREATE TABLE IF NOT EXISTS CRITERIA (
                                         CriteriaID  INTEGER    PRIMARY KEY AUTOINCREMENT
                                                                NOT NULL,
-                                        Description TEXT (100) NOT NULL,
+                                        Name TEXT (50) NOT NULL,
+                                        Description TEXT (200) NOT NULL,
                                         Points      INTEGER    NOT NULL );`,
                            `CREATE TABLE IF NOT EXISTS WAITER (
                                         WaiterID  INTEGER   PRIMARY KEY AUTOINCREMENT
@@ -64,6 +74,29 @@ export class DbService {
         // Connection to database failed
         (error) => {
         observer.error(new Error(`No database connection available: ${error}`));
+        observer.complete();
+      });
+    });
+  }
+
+  public resetDb () : Observable<String> {
+    return Observable.create(observer => {
+      this.connectDb().subscribe(cn => {
+        cn.sqlBatch([`DROP TABLE IF EXISTS CRITERIA;`, `DROP TABLE IF EXISTS WAITER;`])
+          .then(deleted => {
+            this.initializeDb().subscribe(ok => {
+              observer.next('All tables reset');
+              observer.complete();
+            }, error => {
+              observer.error(new Error(error.message));
+              observer.complete();
+            });
+          }).catch(error => {
+            observer.error(new Error(`Could not truncate tables: ${error.message}`));
+            observer.complete();
+          });
+      }, error => {
+        observer.error(new Error(`Could not connect to DB: ${error.message}`));
         observer.complete();
       });
     });

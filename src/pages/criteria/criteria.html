@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Criteria</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addCriteriaTapped()">
+        <ion-icon name="add-circle"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let item of criteria">
+      <ion-item>{{ item.name }}<ion-badge color="secondary" item-end>{{ item.points }}</ion-badge></ion-item>
+
+      <ion-item-options side="right">
+        <button ion-button icon-only color="secondary" (click)="editCriteriaTapped(item)"><ion-icon name="open"></ion-icon></button>
+        <button ion-button icon-only color="danger" (click)="deleteCriteriaTapped(item)"><ion-icon name="trash"></ion-icon></button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>

@@ -1,5 +1,6 @@
-export class Criteria {
-  constructor(criteriaId:number,
-              description: string,
-              points: number) {}
+export interface Criteria {
+  name: string,
+  description: string,
+  points: number,
+  criteriaId?: number
 }

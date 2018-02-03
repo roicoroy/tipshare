@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Criteria Definition</ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
+
+      <ion-item>
+        <ion-label stacked>
+          {{ (myForm.controls.name.valid || (myForm.controls.name.pristine && !submitted))
+            ? 'Criteria Name'
+            : 'Criteria Name (between 5 and 50 characters required)' }}
+        </ion-label>
+        <ion-input type="text" formControlName="name" placeholder="e.g. Long service"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>
+          {{ (myForm.controls.description.valid || (myForm.controls.description.pristine && !submitted))
+          ? 'Description'
+          : 'Description (between 20 and 200 characters required)' }}
+        </ion-label>
+        <ion-textarea type="text" formControlName="description"
+                      placeholder="e.g. Waiter has served for more than 5 years"></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+        <ion-label stacked>
+          {{ (myForm.controls.points.valid || (myForm.controls.points.pristine && !submitted))
+          ? 'Points'
+          : 'Points (number between 0.5 and 10)' }}
+        </ion-label>
+        <ion-input type="text" formControlName="points" placeholder="e.g. 1.5"></ion-input>
+      </ion-item>
+
+      <button ion-button type="submit" float-right margin>Save</button>
+  </form>
+</ion-content>
