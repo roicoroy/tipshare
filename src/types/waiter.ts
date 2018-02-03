@@ -1,5 +1,5 @@
-export class Waiter {
-  constructor(waiterId: number,
-              firstName: string,
-              lastName: string) {}
+export interface Waiter {
+  firstName: string,
+  lastName: string, 
+  waiterId?: number
 }
