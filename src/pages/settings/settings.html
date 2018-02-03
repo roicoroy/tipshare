@@ -7,7 +7,7 @@
 <ion-content>
   <ion-list>
     <button ion-item (click)="gotoCriteriaPage()"><ion-icon name="pie" item-start></ion-icon>Sharing Criteria</button>
-    <button ion-item><ion-icon name="people" item-start></ion-icon>Waiters</button>
+    <button ion-item tappable (click)="gotoWaitersPage()"><ion-icon name="people" item-start></ion-icon>Waiters</button>
     <button ion-item (click)="resetDb()"><ion-icon name="trash" item-start></ion-icon>Delete all data</button>
   </ion-list>
 </ion-content>

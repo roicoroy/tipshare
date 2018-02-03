@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {DbService} from "../../services/db.service";
 import {CriteriaPage} from "../criteria/criteria";
+import { WaitersPage } from '../waiters/waiters';
 
 @Component({
   selector: 'page-settings',
@@ -14,6 +15,10 @@ export class SettingsPage {
 
   gotoCriteriaPage() {
     this.navCtrl.push(CriteriaPage);
+  }
+
+  gotoWaitersPage() {
+    this.navCtrl.push(WaitersPage);
   }
 
   resetDb() {

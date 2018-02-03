@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Waiters</ion-title>
+      <ion-buttons end>
+        <button ion-button icon-only (click)="addWaiterTapped()">
+          <ion-icon name="add-circle"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-navbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item-sliding *ngFor="let item of waiters">
+        <ion-item>{{ item.firstName }} {{ item.lastName }}</ion-item>
+  
+        <ion-item-options side="right">
+          <button ion-button icon-only color="secondary" (click)="editWaiterTapped(item)"><ion-icon name="open"></ion-icon></button>
+          <button ion-button icon-only color="danger" (click)="deleteWaiterTapped(item)"><ion-icon name="trash"></ion-icon></button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ion-content>

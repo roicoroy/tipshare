@@ -1,0 +1,30 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>Waiter Definition</ion-title>
+    </ion-navbar>
+  </ion-header>
+  <ion-content>
+    <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
+  
+        <ion-item>
+          <ion-label stacked>
+            {{ (myForm.controls.firstName.valid || (myForm.controls.firstName.pristine && !submitted))
+              ? 'Waiter First Name'
+              : 'Waiter First Name (between 2 and 20 characters required)' }}
+          </ion-label>
+          <ion-input type="text" formControlName="firstName" placeholder="e.g. John"></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label stacked>
+            {{ (myForm.controls.lastName.valid || (myForm.controls.lastName.pristine && !submitted))
+            ? 'Last Name'
+            : 'Last Name (between 2 and 20 characters required)' }}
+          </ion-label>
+          <ion-input type="text" formControlName="lastName" placeholder="e.g. Smith"></ion-input>
+        </ion-item>
+  
+        <button ion-button type="submit" float-right margin>Save</button>
+    </form>
+  </ion-content>
+  
