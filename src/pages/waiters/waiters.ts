@@ -4,6 +4,7 @@ import {NavController} from "ionic-angular";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {DbService} from "../../services/db.service";
 import {Waiter} from "../../types/waiter";
+import { WaiterEntryPage } from "./waiter-entry";
 
 @Component({
   selector: 'page-waiters',
@@ -34,11 +35,11 @@ export class WaitersPage {
     }
 
     public addWaiterTapped() {
-        //this.navController.push(WaiterEntryPage);
+        this.navController.push(WaiterEntryPage);
       }
     
       public editWaiterTapped(waiter: Waiter) {
-        //this.navController.push(WaiterEntryPage, { waiter: waiter });
+        this.navController.push(WaiterEntryPage, { waiter: waiter });
       }
       public deleteWaiterTapped(waiter: Waiter) {
         this.waiterService.delete(waiter).subscribe(deleted => {
