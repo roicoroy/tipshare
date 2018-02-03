@@ -16,6 +16,8 @@ import {CriteriaService} from "../services/criteria.service";
 import {WaiterService} from "../services/waiter.service";
 import {CriteriaPage} from "../pages/criteria/criteria";
 import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
+import { WaitersPage } from '../pages/waiters/waiters';
+import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,8 @@ import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
     SettingsPage,
     CriteriaPage,
     CriteriaEntryPage,
+    WaitersPage,
+    WaiterEntryPage,
     TabsPage
   ],
   imports: [
@@ -39,6 +43,8 @@ import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
     SettingsPage,
     CriteriaPage,
     CriteriaEntryPage,
+    WaitersPage,
+    WaiterEntryPage,
     TabsPage
   ],
   providers: [
