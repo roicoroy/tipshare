@@ -10,7 +10,7 @@ import { DbService } from "../services/db.service";
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any;
+  rootPage:any = TabsPage;
 
   constructor(platform: Platform,
               statusBar: StatusBar,
@@ -18,11 +18,11 @@ export class MyApp {
               private db: DbService
              ) {
     platform.ready().then(() => {
-      this.db.initializeDb()
-        .subscribe(s => this.rootPage = TabsPage,
-                    e => console.log('Help ' + JSON.stringify(e.message)));
       statusBar.styleDefault();
       splashScreen.hide();
+      this.db.initializeDb()
+        .subscribe(s => this.rootPage = TabsPage,
+                    e => console.log(JSON.stringify(e.message)));
     });
   }
 }

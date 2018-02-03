@@ -8,7 +8,7 @@ import {Criteria} from "../../types/criteria";
 import {CriteriaEntryPage} from "./criteria-entry";
 
 @Component({
-  selector: 'page=criteria',
+  selector: 'page-criteria',
   templateUrl: 'criteria.html'
 })
 export class CriteriaPage {
@@ -16,30 +16,39 @@ export class CriteriaPage {
   private criteria:Array<Criteria> = [];
 
   constructor(public navCtrl: NavController,
-              private criteriaService: CriteriaService) {}
+              private criteriaService: CriteriaService) {
+  }
 
-  private addCriteria() {
-    console.log('Add criteria');
+  ionViewDidLoad() {
+    this._getCriteria();
+  }
+
+  ionViewWillEnter() {
+    this._getCriteria();
+  }
+
+  private _getCriteria() {
+    this.criteriaService.get().subscribe(success => {
+      this.criteria = success;
+    }, error => {
+      console.log('error.message');
+      //TODO handle error
+    });
+  }
+
+  public addCriteriaTapped() {
     this.navCtrl.push(CriteriaEntryPage);
   }
 
-  private editCriteria() {
-    //TODO - Save edited criteria to the database and update array
-    console.log('Edit criteria');
+  public editCriteriaTapped(criteria: Criteria) {
+    this.navCtrl.push(CriteriaEntryPage, { criteria: criteria });
   }
-
-  private getCriteria() {
-    //TODO - Get all criteria from the DB and add to array.
-    console.log('Get criteria');
-  }
-
-  private saveCriteria() {
-    //TODO - Save a new criteria to the database and update array.
-    console.log('Save criteria');
-  }
-
-  private deleteCriteria() {
-    //TODO - Remove criteria from the DB and array, are you sure dialog?
-    console.log('Delete criteria');
+  public deleteCriteriaTapped(criteria: Criteria) {
+    this.criteriaService.delete(criteria).subscribe(deleted => {
+      this._getCriteria();
+    }, error => {
+      console.log(error.message);
+      //TODO handle error
+    });
   }
 }
