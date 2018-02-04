@@ -68,7 +68,20 @@ export class DbService {
                                 PRIMARY KEY (
                                     WaiterID,
                                     CriteriaID
-                                ));`];
+                                ));`,
+                                  `CREATE TABLE IF NOT EXISTS TIPS (CycleDate DATE,
+                                                      Archived  BOOLEAN NOT NULL,
+                                                      LogDate   DATE    NOT NULL,
+                                                      WaiterID  INTEGER REFERENCES WAITER (WaiterID) ON DELETE RESTRICT
+                                                                                                     ON UPDATE NO ACTION
+                                                                        NOT NULL,
+                                                      Hours     NUMERIC NOT NULL,
+                                                      Tips      NUMERIC NOT NULL,
+                                                      Points    NUMERIC NOT NULL,
+                                                      PRIMARY KEY (
+                                                          CycleDate,
+                                                          LogDate,
+                                                          WaiterID));`, this.waiters, this.tips];
         //
         db.sqlBatch(dbSetupSql)
           .then(success => {
@@ -95,13 +108,14 @@ export class DbService {
       this.connectDb().subscribe(cn => {
         cn.sqlBatch([`DROP TABLE IF EXISTS CRITERIA;`,
           `DROP TABLE IF EXISTS WAITER;`,
-          `DROP TABLE IF EXISTS WAITER_CRITERIA;`])
+          `DROP TABLE IF EXISTS WAITER_CRITERIA;`,
+          `DROP TABLE IF EXISTS TIPS;`])
           .then(deleted => {
             this.initializeDb().subscribe(ok => {
               observer.next('All tables reset');
               observer.complete();
             }, error => {
-              observer.error(new Error(error.message));
+              observer.error(error);
               observer.complete();
             });
           }).catch(error => {
@@ -114,6 +128,90 @@ export class DbService {
       });
     });
   }
+
+
+
+  //SAMPLE DATA
+  tips = `INSERT INTO TIPS (
+                     Points,
+                     Tips,
+                     Hours,
+                     WaiterID,
+                     LogDate,
+                     Archived,
+                     CycleDate
+                 )
+                 VALUES (
+                     5,
+                     20,
+                     12,
+                     4,
+                     '2018-04-01',
+                     0,
+                     '2018-04-01'
+                 ),
+                 (
+                     5,
+                     45,
+                     6,
+                     4,
+                     '2018-04-07',
+                     0,
+                     '2018-04-01'
+                 ),
+                 (
+                     10,
+                     20,
+                     9,
+                     5,
+                     '2018-04-07',
+                     0,
+                     '2018-04-01'
+                 ),
+                 (
+                     5,
+                     5,
+                     8,
+                     4,
+                     '2018-04-06',
+                     0,
+                     '2018-04-01'
+                 ),
+                 (
+                     5,
+                     10,
+                     10,
+                     4,
+                     '2018-04-05',
+                     0,
+                     '2018-04-01'
+                 ),
+                  (
+                     5,
+                     10,
+                     10,
+                     4,
+                     '2018-04-03',
+                     0,
+                     '2018-04-01'
+                 );
+`
+
+  waiters = `INSERT INTO WAITER (
+                       LastName,
+                       FirstName,
+                       WaiterID
+                   )
+                   VALUES (
+                       'Smith',
+                       'Jon',
+                       4
+                   ),
+                   (
+                       'Hyland',
+                       'Tim',
+                       5
+                   );`;
 
 }
 

@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+import { MomentModule } from 'angular2-moment';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { TipsPage } from "../pages/tips/tips";
@@ -19,6 +20,7 @@ import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
 import { WaitersPage } from '../pages/waiters/waiters';
 import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
 import {ErrorService} from "../services/error.service";
+import {TipService} from "../services/tip.service";
 
 @NgModule({
   declarations: [
@@ -34,7 +36,8 @@ import {ErrorService} from "../services/error.service";
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -55,6 +58,7 @@ import {ErrorService} from "../services/error.service";
     DbService,
     CriteriaService,
     WaiterService,
+    TipService,
     ErrorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
