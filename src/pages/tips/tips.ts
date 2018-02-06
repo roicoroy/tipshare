@@ -4,6 +4,8 @@ import {TipsRecord} from "../../types/tips-record";
 import {TipService} from "../../services/tip.service";
 import {ErrorService} from "../../services/error.service";
 import * as _ from 'lodash';
+import * as moment from "moment";
+import {Moment} from "moment";
 
 @Component({
   selector: 'page-tips',
@@ -20,9 +22,15 @@ export class TipsPage {
               private errorService: ErrorService) {
   }
 
-  ionViewDidEnter() {
+  // addPound(day) {
+  //   day.tips++;
+  //   this.tipService.save(this.tipLog);
+  // }
+  getCycle(date) {
+    let cycleDate = this._ionicDateToMoment(date);
+    console.log('run');
     // Check tips table for any rows with a date of today
-    this.tipService.checkForOpenCycles().subscribe(result => {
+    this.tipService.get(cycleDate).subscribe(result => {
         this.tipLog = result;
         this.cycleDateControl = result.cycleDate.format('YYYY-MM-DD');
     }, error => {
@@ -56,6 +64,10 @@ export class TipsPage {
       total += d.tips;
     });
     return total.toFixed(2);
+  }
+
+  private _ionicDateToMoment(date: any) : Moment {
+    return moment().year(date.year).month(date.month-1).date(date.day);
   }
 
 }

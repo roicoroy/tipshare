@@ -13,7 +13,9 @@
       <ion-label>
         <ion-icon name="calendar" item-start></ion-icon>
         Start</ion-label>
-      <ion-datetime displayFormat="DDDD MMM D, YYYY" pickerFormat="DDD MMM YYYY" [(ngModel)]="cycleDateControl"></ion-datetime>
+      <ion-datetime displayFormat="DDDD MMM D, YYYY" pickerFormat="DDD MMM YYYY"
+                    [(ngModel)]="cycleDateControl" #date (ngModelChange)="getCycle(date.value)">
+      </ion-datetime>
     </ion-item>
     <ion-list-header>Daily Tip Records</ion-list-header>
     <button ion-item *ngFor="let day of tipLog.waiterLog">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
