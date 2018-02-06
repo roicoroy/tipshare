@@ -24,13 +24,15 @@ export class WaiterService {
           .then(data => {
             let waiters:Array<Waiter> = [];
             if(data.rows.length > 0) {
-              let temp;
+              let tempWaiter;
               for(let i = 0; i < data.rows.length; i++) {
-                temp = { firstName: data.rows.item(i).FirstName
-                  , lastName: data.rows.item(i).LastName
-                  , criteria: this.getCriteria(data.rows.item(i).WaiterID)
-                  , waiterId: data.rows.item(i).WaiterID };
-                waiters.push(temp);
+                this.getCriteria(data.rows.item(i).WaiterID).subscribe(res => {
+                  tempWaiter = { firstName: data.rows.item(i).FirstName
+                    , lastName: data.rows.item(i).LastName
+                    , criteria: res
+                    , waiterId: data.rows.item(i).WaiterID };
+                    waiters.push(tempWaiter);
+                });
               }
             }
             //Return waiters array (populated or empty) to any subscribers
@@ -107,15 +109,15 @@ export class WaiterService {
     });
   }
 
-  private getCriteria(waiterId: string) {
+  private getCriteria(waiterId: number) {
     return Observable.create(observer => {
       this.db.connectDb().subscribe(cn => {
         cn.executeSql(`SELECT CRITERIA.CriteriaID
-          , CRITERIA.Name
-          , CRITERIA.Description
-          , CRITERIA.Points
+            , CRITERIA.Name
+            , CRITERIA.Description
+            , CRITERIA.Points
           FROM CRITERIA
-            LEFT JOIN WAITER_CRITERIA ON CRITERIA.CriteriaID = WAITER_CRITERIA.CriteriaID
+            LEFT OUTER JOIN WAITER_CRITERIA ON CRITERIA.CriteriaID = WAITER_CRITERIA.CriteriaID
           WHERE WAITER_CRITERIA.WaiterID = ?`, [waiterId])
           .then(data => {
             let criteria:Array<Criteria> = [];
@@ -129,6 +131,11 @@ export class WaiterService {
                 criteria.push(temp);
               }
             }
+            observer.next(criteria);
+            observer.complete();
+          }).catch(error => {
+            observer.error(new Error(error.message));
+            observer.complete();
           })
       });
     });
@@ -137,6 +144,7 @@ export class WaiterService {
   public addCriteria(criteria: Criteria, waiter: Waiter) {
     return Observable.create(observer => {
       this.db.connectDb().subscribe(cn => {
+        console.log(criteria.criteriaId);
         cn.executeSql(`INSERT INTO WAITER_CRITERIA (WaiterID, CriteriaID) VALUES (?,?);`,
            [criteria.criteriaId, waiter.waiterId])
           .then(() => {

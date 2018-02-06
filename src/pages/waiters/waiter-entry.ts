@@ -16,6 +16,7 @@ export class WaiterEntryPage {
     public myForm: FormGroup;
     public editWaiter = null;
     private criteriaOptions: Array<Criteria> = [];
+    private tempCriteria: Array<Criteria> = [];
 
     constructor(private navCtrl: NavController,
         private navParams: NavParams,
@@ -46,7 +47,6 @@ export class WaiterEntryPage {
     }
 
     public save(waiter: Waiter) {
-
         //Check to see if this is editing an existing waiter and if so update
         if(this.editWaiter) {
           waiter.waiterId = this.editWaiter.waiterId;
@@ -57,13 +57,20 @@ export class WaiterEntryPage {
           });
         } else {
           //If not editing, add a new waiter
-          this.waiterService.add(waiter).subscribe(() => {
-            this.navCtrl.pop();
+          this.waiterService.add(waiter).subscribe(data => {
+            if(this.tempCriteria.length > 0) {
+              for(let criteria of this.tempCriteria) {
+                this.waiterService.addCriteria(criteria, waiter).subscribe(() => {
+                  this.navCtrl.pop();
+                });
+              }
+            } else {
+              this.navCtrl.pop();
+            }
           }, error => {
             this.errorService.handleError(error);
           });
         }
-
       }
 
       private getCriteria() {
@@ -72,6 +79,35 @@ export class WaiterEntryPage {
         }, error => {
           this.errorService.handleError(error);
         });
+      }
+
+      private criteriaToggled(e, criteria: Criteria) {
+        if(this.editWaiter) {
+          if(e.checked) {
+            this.waiterService.addCriteria(criteria, this.editWaiter)
+              .subscribe();
+          } else {
+            this.waiterService.removeCriteria(criteria, this.editWaiter)
+              .subscribe();
+          }
+        } else {
+          if(e.checked) {
+            this.tempCriteria.push(criteria);
+          } else {
+            this.tempCriteria.splice(this.tempCriteria.indexOf(criteria), 1);
+          }
+        }
+      }
+
+      private checkCriteria(criteriaOption: Criteria) {
+        if(this.editWaiter) {
+          for(let criteria of this.editWaiter.criteria) {
+            if (criteria.criteriaId == criteriaOption.criteriaId) {
+              return true
+            }
+          }
+        }
+        return false;
       }
 
 }
