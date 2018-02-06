@@ -5,7 +5,7 @@
   </ion-header>
   <ion-content>
     <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
-  
+
         <ion-item>
           <ion-label stacked>
             {{ (myForm.controls.firstName.valid || (myForm.controls.firstName.pristine && !submitted))
@@ -14,7 +14,7 @@
           </ion-label>
           <ion-input type="text" formControlName="firstName" placeholder="e.g. John"></ion-input>
         </ion-item>
-  
+
         <ion-item>
           <ion-label stacked>
             {{ (myForm.controls.lastName.valid || (myForm.controls.lastName.pristine && !submitted))
@@ -23,18 +23,17 @@
           </ion-label>
           <ion-input type="text" formControlName="lastName" placeholder="e.g. Smith"></ion-input>
         </ion-item>
-  
+
         <button ion-button type="submit" float-right margin>Save</button>
     </form>
 
-    <ion-list *ngIf="criteriaOptions">
-      <ion-list-header>Criteria</ion-list-header>
-      <ion-item *ngFor="let criteria of criteriaOptions">
-          <ion-badge item-start>{{ criteria.points }}</ion-badge>
-        <ion-label>{{ criteria.name }}</ion-label>
-        <ion-toggle (ionChange)="criteriaToggled($event, criteria)" 
-          [checked]="checkCriteria(criteria)"></ion-toggle>
-      </ion-item>
-    </ion-list>
+    <!--<ion-list *ngIf="criteriaOptions">-->
+      <!--<ion-list-header>Criteria</ion-list-header>-->
+      <!--<ion-item *ngFor="let criteria of criteriaOptions">-->
+          <!--<ion-badge item-start>{{ criteria.points }}</ion-badge>-->
+        <!--<ion-label>{{ criteria.name }}</ion-label>-->
+        <!--<ion-toggle (ionChange)="criteriaToggled($event, criteria)" -->
+          <!--[checked]="checkCriteria(criteria)"></ion-toggle>-->
+      <!--</ion-item>-->
+    <!--</ion-list>-->
   </ion-content>
-  

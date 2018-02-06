@@ -18,7 +18,7 @@ export class TipsPage {
   public tipLog: TipsRecord = { cycleDate: null, archived: false, waiterLog: null };
 
   constructor(public navCtrl: NavController,
-              private tipService: TipService,
+
               private errorService: ErrorService) {
   }
 

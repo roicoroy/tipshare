@@ -1,8 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {DbService} from "../../services/db.service";
 import {CriteriaPage} from "../criteria/criteria";
-import { WaitersPage } from '../waiters/waiters';
+import {WaitersPage} from '../waiters/waiters';
 import {ErrorService} from "../../services/error.service";
 
 @Component({
@@ -12,7 +11,6 @@ import {ErrorService} from "../../services/error.service";
 export class SettingsPage {
 
   constructor(public navCtrl: NavController,
-              private db: DbService,
               private errorService: ErrorService) {}
 
   gotoCriteriaPage() {
@@ -24,7 +22,7 @@ export class SettingsPage {
   }
 
   resetDb() {
-    this.db.resetDb().subscribe(ok => console.log(ok), error => this.errorService.handleError(error));
+    //TODO
   }
 
 }

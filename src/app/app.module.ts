@@ -11,8 +11,6 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { SQLite } from "@ionic-native/sqlite";
-import {DbService} from "../services/db.service";
 import {CriteriaService} from "../services/criteria.service";
 import {WaiterService} from "../services/waiter.service";
 import {CriteriaPage} from "../pages/criteria/criteria";
@@ -21,11 +19,11 @@ import { WaitersPage } from '../pages/waiters/waiters';
 import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
 import {ErrorService} from "../services/error.service";
 import {TipService} from "../services/tip.service";
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
     MyApp,
-    TipsPage,
     SharingPage,
     SettingsPage,
     CriteriaPage,
@@ -37,28 +35,25 @@ import {TipService} from "../services/tip.service";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot(),
     MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    TipsPage,
     SharingPage,
     SettingsPage,
-    CriteriaPage,
-    CriteriaEntryPage,
     WaitersPage,
     WaiterEntryPage,
+    CriteriaPage,
+    CriteriaEntryPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    SQLite,
-    DbService,
-    CriteriaService,
     WaiterService,
-    TipService,
+    CriteriaService,
     ErrorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
