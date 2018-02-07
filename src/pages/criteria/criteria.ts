@@ -16,10 +16,10 @@ export class CriteriaPage {
   constructor(public modalController: ModalController,
               private criteriaService: CriteriaService,
               private errorService: ErrorService) {
-    this.getWaiters();
+    this.getCriteria();
   }
 
-  private getWaiters() {
+  private getCriteria() {
     this.criteriaService.get()
       .then(success => {
         if(success) {

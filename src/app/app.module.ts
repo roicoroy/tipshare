@@ -35,7 +35,10 @@ import {IonicStorageModule} from "@ionic/storage";
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
+    IonicStorageModule.forRoot({
+      name: '__tipshare',
+      driverOrder: ['indexeddb', 'sqlite', 'websql']
+    }),
     MomentModule
   ],
   bootstrap: [IonicApp],

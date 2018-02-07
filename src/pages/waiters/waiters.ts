@@ -4,6 +4,7 @@ import {ModalController} from "ionic-angular";
 import {Waiter} from "../../types/waiter";
 import {WaiterEntryPage} from "./waiter-entry";
 import {ErrorService} from "../../services/error.service";
+import {Criteria} from "../../types/criteria";
 
 @Component({
   selector: 'page-waiters',
@@ -12,6 +13,7 @@ import {ErrorService} from "../../services/error.service";
 export class WaitersPage {
 
   public waiters:Array<Waiter> = [];
+  public criteria: Array<Criteria> = [];
 
   constructor(public modalController: ModalController,
               private waiterService: WaiterService,
@@ -51,7 +53,7 @@ export class WaitersPage {
   }
 
   public editWaiter(waiter: Waiter) {
-    let editWaiterModal = this.modalController.create(WaiterEntryPage, { waiter });
+    let editWaiterModal = this.modalController.create(WaiterEntryPage, { waiter: waiter, criteria: this.criteria  });
 
     editWaiterModal.onDidDismiss(editedWaiter => {
       if(editedWaiter) {
@@ -73,4 +75,5 @@ export class WaitersPage {
     }
     this.waiterService.save(this.waiters);
   }
+
 }

@@ -27,13 +27,12 @@
         <button ion-button type="submit" float-right margin>Save</button>
     </form>
 
-    <!--<ion-list *ngIf="criteriaOptions">-->
-      <!--<ion-list-header>Criteria</ion-list-header>-->
-      <!--<ion-item *ngFor="let criteria of criteriaOptions">-->
-          <!--<ion-badge item-start>{{ criteria.points }}</ion-badge>-->
-        <!--<ion-label>{{ criteria.name }}</ion-label>-->
-        <!--<ion-toggle (ionChange)="criteriaToggled($event, criteria)" -->
-          <!--[checked]="checkCriteria(criteria)"></ion-toggle>-->
-      <!--</ion-item>-->
-    <!--</ion-list>-->
+    <ion-list>
+      <ion-list-header>Criteria</ion-list-header>
+      <ion-item *ngFor="let item of criteria">
+        <ion-label>{{ item.name }}</ion-label>
+        <ion-badge item-end>{{ item.points }}</ion-badge>
+        <ion-checkbox (ionChange)="toggle($event, item)" [checked]="isChecked(item)" ></ion-checkbox>
+      </ion-item>
+    </ion-list>
   </ion-content>
