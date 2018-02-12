@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
 import {CriteriaPage} from "../criteria/criteria";
 import {WaitersPage} from '../waiters/waiters';
-import {ErrorService} from "../../services/error.service";
 
 @Component({
   selector: 'page-settings',
@@ -10,8 +9,7 @@ import {ErrorService} from "../../services/error.service";
 })
 export class SettingsPage {
 
-  constructor(public navCtrl: NavController,
-              private errorService: ErrorService) {}
+  constructor(public navCtrl: NavController) {}
 
   gotoCriteriaPage() {
     this.navCtrl.push(CriteriaPage);

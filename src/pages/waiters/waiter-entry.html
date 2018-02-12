@@ -1,10 +1,20 @@
 <ion-header>
-    <ion-navbar>
-      <ion-title>Waiter Definition</ion-title>
-    </ion-navbar>
-  </ion-header>
+  <ion-navbar>
+    <ion-title>Waiter Setup</ion-title>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="close()">
+        <ion-icon name='close'></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only [disabled]="!myForm.valid" (click)="save(myForm.value, myForm.valid)">
+        <ion-icon name='checkmark'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
   <ion-content>
-    <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
+    <form [formGroup]="myForm" novalidate >
 
         <ion-item>
           <ion-label stacked>
@@ -23,8 +33,6 @@
           </ion-label>
           <ion-input type="text" formControlName="lastName" placeholder="e.g. Smith"></ion-input>
         </ion-item>
-
-        <button ion-button type="submit" float-right margin>Save</button>
     </form>
 
     <ion-list>
@@ -32,7 +40,7 @@
       <ion-item *ngFor="let item of criteria">
         <ion-label>{{ item.name }}</ion-label>
         <ion-badge item-end>{{ item.points }}</ion-badge>
-        <ion-checkbox (ionChange)="toggle($event, item)" [checked]="isChecked(item)" ></ion-checkbox>
+        <ion-checkbox (ionChange)="toggle($event, item)" [checked]="editWaiter?.hasCriteria(item)"></ion-checkbox>
       </ion-item>
     </ion-list>
   </ion-content>

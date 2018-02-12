@@ -2,8 +2,12 @@ import {Component} from "@angular/core";
 import {ModalController} from "ionic-angular";
 import {ErrorService} from "../../services/error.service";
 import {CriteriaService} from "../../services/criteria.service";
-import {Criteria} from "../../types/criteria";
+import {Criteria} from "../../models/criteria.model";
 import {CriteriaEntryPage} from "./criteria-entry";
+import {deserialize} from "serializer.ts/Serializer";
+import * as _ from 'lodash';
+import {WaiterService} from "../../services/waiter.service";
+import {Waiter} from "../../models/waiter.model";
 
 @Component({
   selector: 'page-criteria',
@@ -15,15 +19,16 @@ export class CriteriaPage {
 
   constructor(public modalController: ModalController,
               private criteriaService: CriteriaService,
+              private waiterService: WaiterService,
               private errorService: ErrorService) {
     this.getCriteria();
   }
 
   private getCriteria() {
     this.criteriaService.get()
-      .then(success => {
-        if(success) {
-          this.criteria = success;
+      .then(data => {
+        if(data) {
+          this.criteria = deserialize<Criteria[]>(Criteria, data);
         }
       }).catch(error => {
       this.errorService.handleError(error);
@@ -31,10 +36,8 @@ export class CriteriaPage {
   }
 
   public deleteCriteria(criteria: Criteria) {
-    const index: number = this.criteria.indexOf(criteria);
-    if (index !== -1) {
-      this.criteria.splice(index, 1);
-    }
+    _.pull(this.criteria, criteria);
+    this.cascadeCriteriaChanges(criteria, true);
     this.save();
   }
 
@@ -54,15 +57,11 @@ export class CriteriaPage {
 
     editCriteriaModel.onDidDismiss(editedCriteria => {
       if(editedCriteria) {
-        const index: number = this.criteria.indexOf(criteria);
-        if (index !== -1) {
-          this.criteria.splice(index, 1);
-          this.criteria.push(editedCriteria);
-        }
-        this.save();
+        _.pull(this.criteria, criteria);
+        this.cascadeCriteriaChanges(criteria, false, editedCriteria);
+        this.save(editedCriteria);
       }
     });
-
     editCriteriaModel.present();
   }
 
@@ -72,4 +71,23 @@ export class CriteriaPage {
     }
     this.criteriaService.save(this.criteria);
   }
+
+  public cascadeCriteriaChanges(old: Criteria, isDelete: boolean, updated?: Criteria) {
+    this.waiterService.get()
+      .then(data => {
+        let waiters:Array<Waiter> = deserialize<Waiter[]>(Waiter, data);
+
+          _.forEach(waiters, (w) => {
+            if(isDelete) {
+              w.removeCriteria(old);
+            } else {
+              w.removeCriteria(old);
+              w.addCriteria(updated);
+            }
+          });
+       this.waiterService.save(waiters);
+      });
+  }
+
+
 }

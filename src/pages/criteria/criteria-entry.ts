@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ViewController, NavParams} from "ionic-angular";
-import {Criteria} from "../../types/criteria";
+import {Criteria} from "../../models/criteria.model";
 
 @Component({
   selector: 'page-criteria-entry',
@@ -45,5 +45,9 @@ export class CriteriaEntryPage {
       let criteria = new Criteria(myForm.name, myForm.description, myForm.points);
       this.view.dismiss(criteria);
     }
+  }
+
+  public close() {
+    this.view.dismiss();
   }
 }

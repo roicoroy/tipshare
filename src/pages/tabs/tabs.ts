@@ -10,12 +10,10 @@ import { TipsPage } from "../tips/tips";
 export class TabsPage {
 
   settingsTab = SettingsPage;
-  tipsTab = SettingsPage;
+  tipsTab = TipsPage;
   sharingTab = SharingPage;
 
-  constructor() {
-
-  }
+  constructor() {}
 
 
 }

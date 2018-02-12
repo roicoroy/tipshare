@@ -1,10 +1,11 @@
 import {Component} from "@angular/core";
 import {WaiterService} from "../../services/waiter.service";
 import {ModalController} from "ionic-angular";
-import {Waiter} from "../../types/waiter";
 import {WaiterEntryPage} from "./waiter-entry";
 import {ErrorService} from "../../services/error.service";
-import {Criteria} from "../../types/criteria";
+import {deserialize} from "serializer.ts/Serializer";
+import {Waiter} from "../../models/waiter.model";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'page-waiters',
@@ -13,7 +14,6 @@ import {Criteria} from "../../types/criteria";
 export class WaitersPage {
 
   public waiters:Array<Waiter> = [];
-  public criteria: Array<Criteria> = [];
 
   constructor(public modalController: ModalController,
               private waiterService: WaiterService,
@@ -23,20 +23,18 @@ export class WaitersPage {
 
   private getWaiters() {
     this.waiterService.get()
-      .then(success => {
-        if(success) {
-          this.waiters = success;
+      .then(data => {
+        if(data) {
+          this.waiters = deserialize<Waiter[]>(Waiter, data);
         }
-      }).catch(error => {
-      this.errorService.handleError(error);
-    });
+      })
+      .catch(error => {
+          this.errorService.handleError(error);
+     });
   }
 
   public deleteWaiter(waiter: Waiter) {
-    const index: number = this.waiters.indexOf(waiter);
-    if (index !== -1) {
-      this.waiters.splice(index, 1);
-    }
+    _.pull(this.waiters, waiter);
     this.save();
   }
 
@@ -48,24 +46,18 @@ export class WaitersPage {
         this.save(waiter);
       }
     });
-
     addWaiterModal.present();
   }
 
   public editWaiter(waiter: Waiter) {
-    let editWaiterModal = this.modalController.create(WaiterEntryPage, { waiter: waiter, criteria: this.criteria  });
+    let editWaiterModal = this.modalController.create(WaiterEntryPage, { waiter: waiter });
 
     editWaiterModal.onDidDismiss(editedWaiter => {
       if(editedWaiter) {
-        const index: number = this.waiters.indexOf(waiter);
-        if (index !== -1) {
-          this.waiters.splice(index, 1);
-          this.waiters.push(editedWaiter);
-        }
-        this.save();
+
+        this.save(editedWaiter);
       }
     });
-
     editWaiterModal.present();
   }
 

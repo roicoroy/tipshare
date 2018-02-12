@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Storage} from "@ionic/storage";
-import {Waiter} from "../types/waiter";
+import {Waiter} from "../models/waiter.model";
 
 @Injectable()
 export class WaiterService {

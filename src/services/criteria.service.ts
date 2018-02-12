@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Storage} from "@ionic/storage";
-import {Criteria} from "../types/criteria";
+import {Criteria} from "../models/criteria.model";
 
 @Injectable()
 export class CriteriaService {

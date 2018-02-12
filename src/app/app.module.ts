@@ -30,6 +30,7 @@ import {IonicStorageModule} from "@ionic/storage";
     CriteriaEntryPage,
     WaitersPage,
     WaiterEntryPage,
+    TipsPage,
     TabsPage
   ],
   imports: [
@@ -37,7 +38,7 @@ import {IonicStorageModule} from "@ionic/storage";
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot({
       name: '__tipshare',
-      driverOrder: ['indexeddb', 'sqlite', 'websql']
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
     }),
     MomentModule
   ],
@@ -50,6 +51,7 @@ import {IonicStorageModule} from "@ionic/storage";
     WaiterEntryPage,
     CriteriaPage,
     CriteriaEntryPage,
+    TipsPage,
     TabsPage
   ],
   providers: [
@@ -57,6 +59,7 @@ import {IonicStorageModule} from "@ionic/storage";
     SplashScreen,
     WaiterService,
     CriteriaService,
+    TipService,
     ErrorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

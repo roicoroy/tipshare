@@ -1,11 +1,11 @@
 import {Component} from '@angular/core';
 import { NavController } from 'ionic-angular';
-import {TipsRecord} from "../../types/tips-record";
-import {TipService} from "../../services/tip.service";
-import {ErrorService} from "../../services/error.service";
 import * as _ from 'lodash';
 import * as moment from "moment";
 import {Moment} from "moment";
+import {WaiterService} from "../../services/waiter.service";
+import {TipService} from "../../services/tip.service";
+import {TipLog} from "../../models/tiplog.model";
 
 @Component({
   selector: 'page-tips',
@@ -13,61 +13,40 @@ import {Moment} from "moment";
 })
 export class TipsPage {
 
+  public tipLog: TipLog = new TipLog(null, null);
   public cycleDateControl = null;
 
-  public tipLog: TipsRecord = { cycleDate: null, archived: false, waiterLog: null };
-
   constructor(public navCtrl: NavController,
-
-              private errorService: ErrorService) {
+              private tipService: TipService,
+              private waiterService: WaiterService) {
   }
 
-  // addPound(day) {
-  //   day.tips++;
-  //   this.tipService.save(this.tipLog);
-  // }
-  getCycle(date) {
-    let cycleDate = this._ionicDateToMoment(date);
-    console.log('run');
-    // Check tips table for any rows with a date of today
-    this.tipService.get(cycleDate).subscribe(result => {
-        this.tipLog = result;
-        this.cycleDateControl = result.cycleDate.format('YYYY-MM-DD');
-    }, error => {
-      this.errorService.handleError(error);
-    });
-    // Load all records in the same cycle
-    // Refresh waiters & points
-    // Set start cycle start date picker to cycle date from DB
-    // Disable date picker input
+  public getCycle(cycleDate) {
+    console.log(this.ionicDateToMoment(cycleDate));
   }
 
-  cycleStartDateTrigger() {
-   // Check for existing started cycle
-    // Load all waiters from DB
-    // Set cycle start date
-    // Iterate through days/waiters setting hours and tips to 0
-    // Show UI list
-  }
-
-  archiveCycleTapped() {
-    // Save current cycle
-    // Show are you sure dialog
-    // Clear tiplog
-    // Reset UI
-    // Enable date picker
-  }
-
-  public totalDaysTips(day: Array<any>) : string {
-    let total = 0;
-    _.forEach(day, d => {
-      total += d.tips;
-    });
-    return total.toFixed(2);
-  }
-
-  private _ionicDateToMoment(date: any) : Moment {
+  private ionicDateToMoment(date: any) : Moment {
     return moment().year(date.year).month(date.month-1).date(date.day);
+  }
+
+  public loadCycle(controlDate: any) {
+
+    let date = this.ionicDateToMoment(controlDate);
+    this.tipService.get().then(data => {
+      let openLog = _.find(data, {cycleDate: date});
+      if (openLog) {
+        this.tipLog = openLog;
+        this.cycleDateControl = date;
+      } else {
+        this.waiterService.get()
+          .then(waiters => {
+            if (waiters) {
+              this.tipLog = new TipLog(date, false, waiters);
+              this.cycleDateControl = date;
+            }
+          });
+      }
+    });
   }
 
 }

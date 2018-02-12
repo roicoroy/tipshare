@@ -1,10 +1,20 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>Criteria Definition</ion-title>
+    <ion-title>Criteria Setup</ion-title>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="close()">
+        <ion-icon name='close'></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only [disabled]="!myForm.valid" (click)="save(myForm.value, myForm.valid)">
+        <ion-icon name='checkmark'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 <ion-content>
-  <form [formGroup]="myForm" novalidate (ngSubmit)="save(myForm.value, myForm.valid)">
+  <form [formGroup]="myForm" novalidate>
 
       <ion-item>
         <ion-label stacked>
@@ -33,7 +43,5 @@
         </ion-label>
         <ion-input type="number" min="0" max="10" formControlName="points" placeholder="e.g. 1.5"></ion-input>
       </ion-item>
-
-      <button ion-button type="submit" [disabled]="!myForm.valid" float-right margin>Save</button>
   </form>
 </ion-content>
