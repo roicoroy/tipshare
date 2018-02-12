@@ -54,7 +54,7 @@ export class WaitersPage {
 
     editWaiterModal.onDidDismiss(editedWaiter => {
       if(editedWaiter) {
-
+        _.pull(this.waiters, waiter);
         this.save(editedWaiter);
       }
     });
