@@ -1,9 +1,7 @@
 import {Component} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NavController, NavParams} from "ionic-angular";
-import {CriteriaService} from "../../services/criteria.service";
-import {Criteria} from "../../types/criteria";
-import {ErrorService} from "../../services/error.service";
+import {ViewController, NavParams} from "ionic-angular";
+import {Criteria} from "../../models/criteria.model";
 
 @Component({
   selector: 'page-criteria-entry',
@@ -14,11 +12,9 @@ export class CriteriaEntryPage {
   public myForm: FormGroup;
   public editCriteria = null;
 
-  constructor(private navCtrl: NavController,
+  constructor(public view: ViewController,
               private navParams: NavParams,
-              private formBuilder: FormBuilder,
-              private errorService: ErrorService,
-              private criteriaService: CriteriaService){
+              private formBuilder: FormBuilder){
 
     //Get criteria form ready for new criteria
     this.myForm = this.formBuilder.group({
@@ -44,28 +40,14 @@ export class CriteriaEntryPage {
     }
   }
 
-  public save(criteria: Criteria, isValid: boolean) {
-
+  public save(myForm, isValid:boolean) {
     if(isValid) {
-      //Check to see this if this is an edited existing criteria
-      if(this.editCriteria) {
-        criteria.criteriaId = this.editCriteria.criteriaId;
-        this.criteriaService.update(criteria).subscribe(() => {
-          this.navCtrl.pop();
-        }, error => {
-          this.errorService.handleError(error);
-        });
-      } else {
-        //No, this is a new critera fso call add service
-        this.criteriaService.add(criteria).subscribe(() => {
-          this.navCtrl.pop();
-        }, error => {
-          this.errorService.handleError(error);
-        });
-      }
-    } else {
-      this.errorService.handleError(new Error('Please check form values and try again.'));
+      let criteria = new Criteria(myForm.name, myForm.description, myForm.points);
+      this.view.dismiss(criteria);
     }
+  }
 
+  public close() {
+    this.view.dismiss();
   }
 }

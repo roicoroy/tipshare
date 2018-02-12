@@ -2,6 +2,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
+import { MomentModule } from 'angular2-moment';
 
 import { SettingsPage } from '../pages/settings/settings';
 import { TipsPage } from "../pages/tips/tips";
@@ -10,8 +11,6 @@ import { TabsPage } from '../pages/tabs/tabs';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-import { SQLite } from "@ionic-native/sqlite";
-import {DbService} from "../services/db.service";
 import {CriteriaService} from "../services/criteria.service";
 import {WaiterService} from "../services/waiter.service";
 import {CriteriaPage} from "../pages/criteria/criteria";
@@ -19,42 +18,48 @@ import {CriteriaEntryPage} from "../pages/criteria/criteria-entry";
 import { WaitersPage } from '../pages/waiters/waiters';
 import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
 import {ErrorService} from "../services/error.service";
+import {TipService} from "../services/tip.service";
+import {IonicStorageModule} from "@ionic/storage";
 
 @NgModule({
   declarations: [
     MyApp,
-    TipsPage,
     SharingPage,
     SettingsPage,
     CriteriaPage,
     CriteriaEntryPage,
     WaitersPage,
     WaiterEntryPage,
+    TipsPage,
     TabsPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    IonicStorageModule.forRoot({
+      name: '__tipshare',
+      driverOrder: ['sqlite', 'indexeddb', 'websql']
+    }),
+    MomentModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    TipsPage,
     SharingPage,
     SettingsPage,
-    CriteriaPage,
-    CriteriaEntryPage,
     WaitersPage,
     WaiterEntryPage,
+    CriteriaPage,
+    CriteriaEntryPage,
+    TipsPage,
     TabsPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    SQLite,
-    DbService,
-    CriteriaService,
     WaiterService,
+    CriteriaService,
+    TipService,
     ErrorService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]

@@ -1,17 +1,30 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Contact
+      Tip Recording
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
-    <ion-list-header>Follow us on Twitter</ion-list-header>
+    <ion-list-header>Set Cycle Start Date</ion-list-header>
     <ion-item>
-      <ion-icon name="ionic" item-start></ion-icon>
-      @ionicframework
+      <ion-label>
+        <ion-icon name="calendar" item-start></ion-icon>
+        Start</ion-label>
+      <ion-datetime displayFormat="DDDD MMM D, YYYY" pickerFormat="DDD MMM YYYY"
+                    [(ngModel)]="cycleDateControl" #date (ngModelChange)="loadCycle(date.value)">
+      </ion-datetime>
     </ion-item>
+    <ion-list-header>Daily Tip Records</ion-list-header>
+    <button ion-item *ngFor="let day of tipLog.waiterLog">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
+      <ion-icon name="people" item-end></ion-icon><p item-end>{{ day.log.length }}</p>
+      <ion-badge color="secondary" item-end>£{{ tipLog.getTotalTips(day.logDate) }}</ion-badge>
+    </button>
+  </ion-list>
+
+  <ion-list>
+
   </ion-list>
 </ion-content>

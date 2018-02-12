@@ -1,8 +1,11 @@
 import {Component} from "@angular/core";
 import {WaiterService} from "../../services/waiter.service";
-import {NavController} from "ionic-angular";
-import {Waiter} from "../../types/waiter";
-import { WaiterEntryPage } from "./waiter-entry";
+import {ModalController} from "ionic-angular";
+import {WaiterEntryPage} from "./waiter-entry";
+import {ErrorService} from "../../services/error.service";
+import {deserialize} from "serializer.ts/Serializer";
+import {Waiter} from "../../models/waiter.model";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'page-waiters',
@@ -10,41 +13,59 @@ import { WaiterEntryPage } from "./waiter-entry";
 })
 export class WaitersPage {
 
-    private waiters:Array<Waiter> = [];
+  public waiters:Array<Waiter> = [];
 
-    constructor(public navController:NavController,
-        private waiterService: WaiterService) {}
+  constructor(public modalController: ModalController,
+              private waiterService: WaiterService,
+              private errorService: ErrorService) {
+    this.getWaiters();
+  }
 
-    ionViewDidLoad() {
-        this._getWaiters();
+  private getWaiters() {
+    this.waiterService.get()
+      .then(data => {
+        if(data) {
+          this.waiters = deserialize<Waiter[]>(Waiter, data);
         }
+      })
+      .catch(error => {
+          this.errorService.handleError(error);
+     });
+  }
 
-    ionViewWillEnter() {
-    this._getWaiters();
+  public deleteWaiter(waiter: Waiter) {
+    _.pull(this.waiters, waiter);
+    this.save();
+  }
+
+  public addWaiter() {
+    let addWaiterModal = this.modalController.create(WaiterEntryPage);
+
+    addWaiterModal.onDidDismiss(waiter => {
+      if(waiter) {
+        this.save(waiter);
+      }
+    });
+    addWaiterModal.present();
+  }
+
+  public editWaiter(waiter: Waiter) {
+    let editWaiterModal = this.modalController.create(WaiterEntryPage, { waiter: waiter });
+
+    editWaiterModal.onDidDismiss(editedWaiter => {
+      if(editedWaiter) {
+
+        this.save(editedWaiter);
+      }
+    });
+    editWaiterModal.present();
+  }
+
+  public save(waiter?: Waiter) {
+    if(waiter) {
+      this.waiters.push(waiter);
     }
+    this.waiterService.save(this.waiters);
+  }
 
-    private _getWaiters() {
-        this.waiterService.get().subscribe(success => {
-            this.waiters = success;
-        }, error => {
-            console.log('error.message');
-            //TODO handle get waiters error
-        });
-    }
-
-    public addWaiterTapped() {
-        this.navController.push(WaiterEntryPage);
-      }
-
-      public editWaiterTapped(waiter: Waiter) {
-        this.navController.push(WaiterEntryPage, { waiter: waiter });
-      }
-      public deleteWaiterTapped(waiter: Waiter) {
-        this.waiterService.delete(waiter).subscribe(deleted => {
-          this._getWaiters();
-        }, error => {
-          console.log(error.message);
-          //TODO handle error
-        });
-      }
 }

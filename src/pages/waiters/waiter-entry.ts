@@ -1,11 +1,11 @@
 import {Component} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NavController, NavParams} from "ionic-angular";
-import {WaiterService} from "../../services/waiter.service";
-import { Waiter } from "../../types/waiter";
-import { Criteria } from "../../types/criteria";
-import { CriteriaService } from "../../services/criteria.service";
+import {NavParams, ViewController} from "ionic-angular";
+import {CriteriaService} from "../../services/criteria.service";
 import {ErrorService} from "../../services/error.service";
+import {Criteria} from "../../models/criteria.model";
+import {Waiter} from "../../models/waiter.model";
+import {deserialize} from "serializer.ts/Serializer";
 
 @Component({
   selector: 'page-waiter-entry',
@@ -14,100 +14,69 @@ import {ErrorService} from "../../services/error.service";
 export class WaiterEntryPage {
 
     public myForm: FormGroup;
-    public editWaiter = null;
-    private criteriaOptions: Array<Criteria> = [];
-    private tempCriteria: Array<Criteria> = [];
+    public editWaiter: Waiter;
+    public criteria:Array<Criteria> = [];
 
-    constructor(private navCtrl: NavController,
+    constructor(public view: ViewController,
         private navParams: NavParams,
         private formBuilder: FormBuilder,
-        private waiterService: WaiterService,
         private criteriaService: CriteriaService,
         private errorService: ErrorService) {
 
+      this.getCriteria();
+
         //Get form ready for new waiter
         this.myForm = this.formBuilder.group({
-            firstName: ['', [Validators.required,
+            firstName: ['', Validators.compose([Validators.required,
                 Validators.minLength(2),
-                Validators.maxLength(20) ]],
-            lastName: ['', [Validators.required,
+                Validators.maxLength(20)])],
+            lastName: ['', Validators.compose([Validators.required,
                 Validators.minLength(2),
-                Validators.maxLength(20) ]]
+                Validators.maxLength(20) ])]
         });
-
-        //Check to see if this is editing an existing waiter and if so set form values
-        this.editWaiter = this.navParams.get('waiter');
-        if(this.editWaiter) {
-            this.myForm.setValue({
-            firstName: this.editWaiter.firstName,
-            lastName: this.editWaiter.lastName});
-        }
-
-        this.getCriteria();
     }
 
-    public save(waiter: Waiter) {
-        //Check to see if this is editing an existing waiter and if so update
-        if(this.editWaiter) {
-          waiter.waiterId = this.editWaiter.waiterId;
-          this.waiterService.update(waiter).subscribe(() => {
-            this.navCtrl.pop();
-          }, error => {
-            this.errorService.handleError(error);
-          });
-        } else {
-          //If not editing, add a new waiter
-          this.waiterService.add(waiter).subscribe(data => {
-            if(this.tempCriteria.length > 0) {
-              for(let criteria of this.tempCriteria) {
-                this.waiterService.addCriteria(criteria, waiter).subscribe(() => {
-                  this.navCtrl.pop();
-                });
-              }
-            } else {
-              this.navCtrl.pop();
-            }
-          }, error => {
-            this.errorService.handleError(error);
-          });
-        }
+    public save(myForm, isValid:boolean) {
+      if(isValid) {
+        this.editWaiter.firstName = myForm.firstName;
+        this.editWaiter.lastName = myForm.lastName;
+        this.view.dismiss(this.editWaiter);
       }
+    }
 
-      private getCriteria() {
-        this.criteriaService.get().subscribe(success => {
-          this.criteriaOptions = success;
-        }, error => {
-          this.errorService.handleError(error);
-        });
-      }
+  private getCriteria() {
+    this.criteriaService.get()
+      .then(success => {
+        if(success) {
+          this.criteria = deserialize(Criteria, success);
 
-      private criteriaToggled(e, criteria: Criteria) {
-        if(this.editWaiter) {
-          if(e.checked) {
-            this.waiterService.addCriteria(criteria, this.editWaiter)
-              .subscribe();
+          //Look for a waiter passed in through nav params
+          this.editWaiter = this.navParams.get('waiter');
+
+          //If a waiter has been passed update the form else create a new waiter
+          if(this.editWaiter) {
+            this.myForm.setValue({
+              firstName: this.editWaiter.firstName,
+              lastName: this.editWaiter.lastName});
           } else {
-            this.waiterService.removeCriteria(criteria, this.editWaiter)
-              .subscribe();
-          }
-        } else {
-          if(e.checked) {
-            this.tempCriteria.push(criteria);
-          } else {
-            this.tempCriteria.splice(this.tempCriteria.indexOf(criteria), 1);
+            this.editWaiter = new Waiter('', '', []);
           }
         }
-      }
+      }).catch(error => {
+      this.errorService.handleError(error);
+    });
+  }
 
-      private checkCriteria(criteriaOption: Criteria) {
-        if(this.editWaiter) {
-          for(let criteria of this.editWaiter.criteria) {
-            if (criteria.criteriaId == criteriaOption.criteriaId) {
-              return true
-            }
-          }
-        }
-        return false;
-      }
 
+  public toggle(event, criteria: Criteria) {
+    if(event.checked) {
+      this.editWaiter.addCriteria(criteria);
+    } else {
+      this.editWaiter.removeCriteria(criteria);
+    }
+  }
+
+  public close() {
+      this.view.dismiss();
+  }
 }

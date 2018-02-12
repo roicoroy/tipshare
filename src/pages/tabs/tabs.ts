@@ -13,9 +13,7 @@ export class TabsPage {
   tipsTab = TipsPage;
   sharingTab = SharingPage;
 
-  constructor() {
-
-  }
+  constructor() {}
 
 
 }
