@@ -7,24 +7,42 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-list-header>Set Cycle Start Date</ion-list-header>
+  <ion-list *ngIf="tipLog == null">
     <ion-item>
-      <ion-label>
-        <ion-icon name="calendar" item-start></ion-icon>
-        Start</ion-label>
+      <ion-label><ion-icon name="calendar" item-start></ion-icon>Select start date to begin</ion-label>
       <ion-datetime displayFormat="DDDD MMM D, YYYY" pickerFormat="DDD MMM YYYY"
-                    [(ngModel)]="cycleDateControl" #date (ngModelChange)="loadCycle(date.value)">
+                    [(ngModel)]="cycleDateControl" #date (ngModelChange)="createNewCycle(date.value)">
       </ion-datetime>
     </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="tipLog?.waiterLog">
     <ion-list-header>Daily Tip Records</ion-list-header>
-    <button ion-item *ngFor="let day of tipLog.waiterLog">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
-      <ion-icon name="people" item-end></ion-icon><p item-end>{{ day.log.length }}</p>
-      <ion-badge color="secondary" item-end>£{{ tipLog.getTotalTips(day.logDate) }}</ion-badge>
+    <button ion-item *ngFor="let day of tipLog?.waiterLog">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
+      <ion-icon name="people" item-end></ion-icon><p item-end>{{ day.howManyWaiters }}</p>
+      <ion-badge color="secondary" item-end>£{{ day.getTotalTips }}</ion-badge>
     </button>
+    <ion-list-header>Cycle Controls</ion-list-header>
+    <button (click)="archiveCycle()" ion-item><ion-icon name="trash" item-start></ion-icon>Archive Cycle</button>
+    <button ion-item><ion-icon name="refresh" item-start></ion-icon>Reload All Points</button>
+    <button ion-item><ion-icon name="people" item-start></ion-icon>Reload All Waiters</button>
   </ion-list>
 
   <ion-list>
-
+    <ion-list-header>Archived Cycles
+      <button ion-button (click)="toggleArchive()" item-end icon-right>Show archives
+        <ion-icon name="archive"></ion-icon>
+      </button></ion-list-header>
+    <ng-container *ngIf="showArchive">
+    <ion-searchbar></ion-searchbar>
+    <ion-item-sliding *ngFor="let log of tipLogData | archivedItems">
+      <ion-icon name="calendar" item-start></ion-icon>
+      <ion-item>{{ log.cycleDate | amDateFormat:'ddd, D MMM YYYY'}}</ion-item>
+      <ion-item-options side="right">
+        <button ion-button color="light"><ion-icon name="stats"></ion-icon>Stats</button>
+        <button ion-button color="secondary"><ion-icon name="archive"></ion-icon>Reopen</button>
+      </ion-item-options>
+    </ion-item-sliding>
+    </ng-container>
   </ion-list>
 </ion-content>

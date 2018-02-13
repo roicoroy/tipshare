@@ -5,7 +5,7 @@ import {CriteriaService} from "../../services/criteria.service";
 import {ErrorService} from "../../services/error.service";
 import {Criteria} from "../../models/criteria.model";
 import {Waiter} from "../../models/waiter.model";
-import {deserialize} from "serializer.ts/Serializer";
+import {plainToClass} from "class-transformer";
 
 @Component({
   selector: 'page-waiter-entry',
@@ -48,7 +48,7 @@ export class WaiterEntryPage {
     this.criteriaService.get()
       .then(success => {
         if(success) {
-          this.criteria = deserialize(Criteria, success);
+          this.criteria = plainToClass(Criteria, success);
 
           //Look for a waiter passed in through nav params
           this.editWaiter = this.navParams.get('waiter');

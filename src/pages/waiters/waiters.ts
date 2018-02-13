@@ -3,9 +3,9 @@ import {WaiterService} from "../../services/waiter.service";
 import {ModalController} from "ionic-angular";
 import {WaiterEntryPage} from "./waiter-entry";
 import {ErrorService} from "../../services/error.service";
-import {deserialize} from "serializer.ts/Serializer";
 import {Waiter} from "../../models/waiter.model";
 import * as _ from 'lodash';
+import {plainToClass} from "class-transformer";
 
 @Component({
   selector: 'page-waiters',
@@ -25,7 +25,7 @@ export class WaitersPage {
     this.waiterService.get()
       .then(data => {
         if(data) {
-          this.waiters = deserialize<Waiter[]>(Waiter, data);
+          this.waiters = plainToClass(Waiter, data);
         }
       })
       .catch(error => {
