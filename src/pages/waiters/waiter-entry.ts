@@ -5,7 +5,6 @@ import {CriteriaService} from "../../services/criteria.service";
 import {ErrorService} from "../../services/error.service";
 import {Criteria} from "../../models/criteria.model";
 import {Waiter} from "../../models/waiter.model";
-import {plainToClass} from "class-transformer";
 
 @Component({
   selector: 'page-waiter-entry',
@@ -45,24 +44,20 @@ export class WaiterEntryPage {
     }
 
   private getCriteria() {
-    this.criteriaService.get()
-      .then(success => {
-        if(success) {
-          this.criteria = plainToClass(Criteria, success);
+    this.criteriaService.get().subscribe(data => {
+      this.criteria = data;
+      //Look for a waiter passed in through nav params
+      this.editWaiter = this.navParams.get('waiter');
 
-          //Look for a waiter passed in through nav params
-          this.editWaiter = this.navParams.get('waiter');
-
-          //If a waiter has been passed update the form else create a new waiter
-          if(this.editWaiter) {
-            this.myForm.setValue({
-              firstName: this.editWaiter.firstName,
-              lastName: this.editWaiter.lastName});
-          } else {
-            this.editWaiter = new Waiter('', '', []);
-          }
-        }
-      }).catch(error => {
+      //If a waiter has been passed update the form else create a new waiter
+      if(this.editWaiter) {
+        this.myForm.setValue({
+          firstName: this.editWaiter.firstName,
+          lastName: this.editWaiter.lastName});
+      } else {
+        this.editWaiter = new Waiter('', '', []);
+      }
+    }, error => {
       this.errorService.handleError(error);
     });
   }

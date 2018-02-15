@@ -5,7 +5,6 @@ import {WaiterEntryPage} from "./waiter-entry";
 import {ErrorService} from "../../services/error.service";
 import {Waiter} from "../../models/waiter.model";
 import * as _ from 'lodash';
-import {plainToClass} from "class-transformer";
 
 @Component({
   selector: 'page-waiters',
@@ -22,15 +21,11 @@ export class WaitersPage {
   }
 
   private getWaiters() {
-    this.waiterService.get()
-      .then(data => {
-        if(data) {
-          this.waiters = plainToClass(Waiter, data);
-        }
-      })
-      .catch(error => {
-          this.errorService.handleError(error);
-     });
+    this.waiterService.get().subscribe(data => {
+      this.waiters = data;
+    }, error => {
+      this.errorService.handleError(error);
+    });
   }
 
   public deleteWaiter(waiter: Waiter) {

@@ -6,7 +6,6 @@ import {Moment} from "moment";
 import {WaiterService} from "../../services/waiter.service";
 import {TipService} from "../../services/tip.service";
 import {TipLog} from "../../models/tiplog.model";
-import {plainToClass} from "class-transformer";
 import {ErrorService} from "../../services/error.service";
 
 @Component({
@@ -37,19 +36,16 @@ export class TipsPage {
 
   public checkForOpenCycle() {
     // Go to storage an retrieve all tiplogs
-    this.tipService.get().then(data => {
-
-      // If there are any logs convert to class instances of objects
-      if (data) {
-        this.tipLogData = plainToClass(TipLog, data);
-      }
-
+    this.tipService.get().subscribe(data => {
+      this.tipLogData = data;
       // See if there is an open log
       let openLog = _.find(this.tipLogData, {archived: false});
       if (openLog) {
         // Yep = bind to view
         this.tipLog = openLog;
       }
+    }, error => {
+      this.errorService.handleError(error);
     });
   }
 
@@ -60,13 +56,12 @@ export class TipsPage {
       if(_.find(this.tipLogData, {cycleDateDay: date.startOf('day')})) {
         this.errorService.handleError(new Error('Cycle already open for this date. Check archives.'));
       } else {
-        this.waiterService.get()
-          .then(waiters => {
-            if (waiters) {
-              this.tipLog = new TipLog(date, false, waiters);
-              this.save(this.tipLog);
-            }
-          });
+        this.waiterService.get().subscribe(data => {
+          this.tipLog = new TipLog(date, false, data);
+          this.save(this.tipLog);
+        }, error => {
+          this.errorService.handleError(error);
+        });
       }
     }
   }
