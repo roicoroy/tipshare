@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { MomentModule } from 'angular2-moment';
+import "reflect-metadata";
 
 import { SettingsPage } from '../pages/settings/settings';
 import { TipsPage } from "../pages/tips/tips";
@@ -20,6 +21,7 @@ import { WaiterEntryPage } from '../pages/waiters/waiter-entry';
 import {ErrorService} from "../services/error.service";
 import {TipService} from "../services/tip.service";
 import {IonicStorageModule} from "@ionic/storage";
+import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
 
 @NgModule({
   declarations: [
@@ -31,7 +33,8 @@ import {IonicStorageModule} from "@ionic/storage";
     WaitersPage,
     WaiterEntryPage,
     TipsPage,
-    TabsPage
+    TabsPage,
+    CycleArchivedPipe
   ],
   imports: [
     BrowserModule,

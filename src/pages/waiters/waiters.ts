@@ -3,7 +3,6 @@ import {WaiterService} from "../../services/waiter.service";
 import {ModalController} from "ionic-angular";
 import {WaiterEntryPage} from "./waiter-entry";
 import {ErrorService} from "../../services/error.service";
-import {deserialize} from "serializer.ts/Serializer";
 import {Waiter} from "../../models/waiter.model";
 import * as _ from 'lodash';
 
@@ -22,15 +21,11 @@ export class WaitersPage {
   }
 
   private getWaiters() {
-    this.waiterService.get()
-      .then(data => {
-        if(data) {
-          this.waiters = deserialize<Waiter[]>(Waiter, data);
-        }
-      })
-      .catch(error => {
-          this.errorService.handleError(error);
-     });
+    this.waiterService.get().subscribe(data => {
+      this.waiters = data;
+    }, error => {
+      this.errorService.handleError(error);
+    });
   }
 
   public deleteWaiter(waiter: Waiter) {
@@ -54,7 +49,7 @@ export class WaitersPage {
 
     editWaiterModal.onDidDismiss(editedWaiter => {
       if(editedWaiter) {
-
+        _.pull(this.waiters, waiter);
         this.save(editedWaiter);
       }
     });

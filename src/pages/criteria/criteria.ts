@@ -4,7 +4,6 @@ import {ErrorService} from "../../services/error.service";
 import {CriteriaService} from "../../services/criteria.service";
 import {Criteria} from "../../models/criteria.model";
 import {CriteriaEntryPage} from "./criteria-entry";
-import {deserialize} from "serializer.ts/Serializer";
 import * as _ from 'lodash';
 import {WaiterService} from "../../services/waiter.service";
 import {Waiter} from "../../models/waiter.model";
@@ -25,12 +24,9 @@ export class CriteriaPage {
   }
 
   private getCriteria() {
-    this.criteriaService.get()
-      .then(data => {
-        if(data) {
-          this.criteria = deserialize<Criteria[]>(Criteria, data);
-        }
-      }).catch(error => {
+    this.criteriaService.get().subscribe(data => {
+      this.criteria = data;
+    }, error => {
       this.errorService.handleError(error);
     });
   }
@@ -73,20 +69,20 @@ export class CriteriaPage {
   }
 
   public cascadeCriteriaChanges(old: Criteria, isDelete: boolean, updated?: Criteria) {
-    this.waiterService.get()
-      .then(data => {
-        let waiters:Array<Waiter> = deserialize<Waiter[]>(Waiter, data);
-
-          _.forEach(waiters, (w) => {
-            if(isDelete) {
-              w.removeCriteria(old);
-            } else {
-              w.removeCriteria(old);
-              w.addCriteria(updated);
-            }
-          });
-       this.waiterService.save(waiters);
+    this.waiterService.get().subscribe(data => {
+      let waiters:Array<Waiter> = data;
+      _.forEach(waiters, (w) => {
+        if(isDelete) {
+          w.removeCriteria(old);
+        } else {
+          w.removeCriteria(old);
+          w.addCriteria(updated);
+        }
       });
+      this.waiterService.save(waiters);
+    }, error => {
+      this.errorService.handleError(error);
+    });
   }
 
 
