@@ -29,7 +29,7 @@ export class TipLog {
 
       let emptyLogs = [];
       _.forEach(waiters, w => {
-        emptyLogs.push({ points: 0, hours: 0, tips: 20, waiter: w });
+        emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w });
       });
 
       let waiterLog:Array<WaiterLog> = [new WaiterLog(cycleDate,emptyLogs)];
