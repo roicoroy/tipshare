@@ -1,12 +1,14 @@
 import {Component} from '@angular/core';
-import { NavController } from 'ionic-angular';
+import {ModalController, PopoverController} from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from "moment";
 import {Moment} from "moment";
 import {WaiterService} from "../../services/waiter.service";
 import {TipService} from "../../services/tip.service";
-import {TipLog} from "../../models/tiplog.model";
+import {TipLog, WaiterLog} from "../../models/tiplog.model";
 import {ErrorService} from "../../services/error.service";
+import {TipdayModal} from "./tipday-modal";
+import {TipsPopover} from "./tips-popover";
 
 @Component({
   selector: 'page-tips',
@@ -19,16 +21,14 @@ export class TipsPage {
   public cycleDateControl = null;
   public showArchive = false;
 
-  constructor(public navCtrl: NavController,
+  constructor(public modalController: ModalController,
+              public popoverController: PopoverController,
               private tipService: TipService,
               private waiterService: WaiterService,
               private errorService: ErrorService ) {
     this.checkForOpenCycle();
   }
 
-  public getCycle(cycleDate) {
-    console.log(this.ionicDateToMoment(cycleDate));
-  }
 
   private ionicDateToMoment(date: any) : Moment {
     return moment().year(date.year).month(date.month-1).date(date.day);
@@ -70,6 +70,7 @@ export class TipsPage {
     if(newTipLog) {
       this.tipLogData.push(newTipLog);
     }
+
     this.tipService.save(this.tipLogData);
   }
 
@@ -82,7 +83,51 @@ export class TipsPage {
     this.save();
   }
 
+  public editDay(day) {
+
+    let editDayModal = this.modalController.create(TipdayModal, { log: day });
+
+    editDayModal.onDidDismiss(editedLog => {
+      if(editedLog) {
+        this.tipLog.updateDay(day.logDate, editedLog);
+        this.save();
+      }
+    });
+    editDayModal.present();
+  }
+
   public toggleArchive() {
     this.showArchive = !this.showArchive;
+  }
+
+  public presentPopover(myEvent) {
+    let popover = this.popoverController.create(TipsPopover);
+    popover.present({
+      ev: myEvent
+    });
+
+    popover.onDidDismiss(resulting => {
+      if(resulting) {
+        switch(resulting.action) {
+          case 'archive' : {
+            this.archiveCycle();
+            break;
+          }
+          case 'refreshWaiters' : {
+            console.log('Refresh waiters from DB');
+            //TODO
+            break;
+          }
+          case 'refreshPoints' : {
+            console.log('Refresh Points from DB');
+            //TODO
+            break;
+          }
+          default : {
+            break;
+          }
+        }
+      }
+    });
   }
 }

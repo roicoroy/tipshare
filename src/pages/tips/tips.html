@@ -1,8 +1,9 @@
 <ion-header>
   <ion-navbar>
-    <ion-title>
-      Tip Recording
-    </ion-title>
+    <ion-title>Tip Recording</ion-title>
+    <ion-buttons end><button ion-button icon-only (click)="presentPopover($event)" *ngIf="tipLog?.waiterLog">
+      <ion-icon name="more"></ion-icon>
+    </button></ion-buttons>
   </ion-navbar>
 </ion-header>
 
@@ -18,14 +19,10 @@
 
   <ion-list *ngIf="tipLog?.waiterLog">
     <ion-list-header>Daily Tip Records</ion-list-header>
-    <button ion-item *ngFor="let day of tipLog?.waiterLog">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
+    <button ion-item *ngFor="let day of tipLog?.waiterLog" (click)="editDay(day)">{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}
       <ion-icon name="people" item-end></ion-icon><p item-end>{{ day.howManyWaiters }}</p>
       <ion-badge color="secondary" item-end>£{{ day.getTotalTips }}</ion-badge>
     </button>
-    <ion-list-header>Cycle Controls</ion-list-header>
-    <button (click)="archiveCycle()" ion-item><ion-icon name="trash" item-start></ion-icon>Archive Cycle</button>
-    <button ion-item><ion-icon name="refresh" item-start></ion-icon>Reload All Points</button>
-    <button ion-item><ion-icon name="people" item-start></ion-icon>Reload All Waiters</button>
   </ion-list>
 
   <ion-list>
@@ -46,3 +43,4 @@
     </ng-container>
   </ion-list>
 </ion-content>
+

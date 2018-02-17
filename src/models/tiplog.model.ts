@@ -16,7 +16,7 @@ export class TipLog {
   private _archived: boolean;
 
   @Type(() => WaiterLog)
-  private waiterLog: Array<WaiterLog>;
+  private _waiterLog: Array<WaiterLog>;
 
   constructor(cycleDate: Moment,
               archived: boolean,
@@ -27,16 +27,11 @@ export class TipLog {
       this._cycleDate = cycleDate;
       this._archived = archived;
 
-      let emptyLogs = [];
-      _.forEach(waiters, w => {
-        emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w });
-      });
-
-      let waiterLog:Array<WaiterLog> = [new WaiterLog(cycleDate,emptyLogs)];
+      let waiterLog:Array<WaiterLog> = [new WaiterLog(cycleDate, waiters)];
       for(let i = 1; i < 7; i++) {
-        waiterLog.push(new WaiterLog(cycleDate.clone().add(i, 'days'), emptyLogs));
+        waiterLog.push(new WaiterLog(cycleDate.clone().add(i, 'days'), waiters));
       }
-      this.waiterLog = waiterLog;
+      this._waiterLog = waiterLog;
     }
   }
 
@@ -63,6 +58,16 @@ export class TipLog {
   get cycleDateDay() {
     return this._cycleDate.startOf('day');
   }
+
+
+  get waiterLog(): Array<WaiterLog> {
+    return this._waiterLog;
+  }
+
+  public updateDay(date: Moment, update: WaiterLog) {
+    let index = _.findIndex(this._waiterLog, {logDate: date});
+    this._waiterLog.splice(index, 1, update);
+  }
 }
 
 export class WaiterLog {
@@ -74,13 +79,25 @@ export class WaiterLog {
   private _log: Array<{ waiter: Waiter, points: number, hours: number, tips: number }>;
 
 
-  constructor(logDate: Moment, log: Array<{ waiter: Waiter; points: number; hours: number; tips: number }>) {
+  constructor(logDate: Moment, waiters: Array<Waiter>) {
+    let emptyLogs = [];
+    _.forEach(waiters, w => {
+      emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w });
+    });
+    this._log = emptyLogs;
     this._logDate = logDate;
-    this._log = log;
   }
 
   get logDate(): Moment {
     return this._logDate;
+  }
+
+  get log(): Array<{ waiter: Waiter; points: number; hours: number; tips: number }> {
+    return this._log;
+  }
+
+  get logDateMs() : number {
+    return this._logDate.valueOf();
   }
 
   get howManyWaiters() : number {
@@ -90,11 +107,9 @@ export class WaiterLog {
   get getTotalTips() : number {
     let total = 0;
     _.forEach(this._log, d => {
-      total += d.tips;
+      total += +d.tips;
     });
     return total;
   }
-
-
 
 }

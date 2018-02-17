@@ -22,6 +22,8 @@ import {ErrorService} from "../services/error.service";
 import {TipService} from "../services/tip.service";
 import {IonicStorageModule} from "@ionic/storage";
 import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
+import {TipdayModal} from "../pages/tips/tipday-modal";
+import {TipsPopover} from "../pages/tips/tips-popover";
 
 @NgModule({
   declarations: [
@@ -33,6 +35,8 @@ import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
     WaitersPage,
     WaiterEntryPage,
     TipsPage,
+    TipdayModal,
+    TipsPopover,
     TabsPage,
     CycleArchivedPipe
   ],
@@ -55,6 +59,8 @@ import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
     CriteriaPage,
     CriteriaEntryPage,
     TipsPage,
+    TipdayModal,
+    TipsPopover,
     TabsPage
   ],
   providers: [
