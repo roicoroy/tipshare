@@ -2,9 +2,8 @@ import {Moment} from "moment";
 import {Waiter} from "./waiter.model";
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {plainToClass, Transform, Type} from "class-transformer";
+import {Transform, Type} from "class-transformer";
 import {UUID} from "angular2-uuid";
-import {listLazyRoutes} from "@angular/compiler/src/aot/lazy_routes";
 
 export class TipLog {
   private _id: UUID;
