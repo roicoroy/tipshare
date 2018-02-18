@@ -24,6 +24,7 @@ import {IonicStorageModule} from "@ionic/storage";
 import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
 import {TipdayModal} from "../pages/tips/tipday-modal";
 import {TipsPopover} from "../pages/tips/tips-popover";
+import {TipArchiveModal} from "../pages/tips/tip-archive-modal";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {TipsPopover} from "../pages/tips/tips-popover";
     TipsPage,
     TipdayModal,
     TipsPopover,
+    TipArchiveModal,
     TabsPage,
     CycleArchivedPipe
   ],
@@ -61,6 +63,7 @@ import {TipsPopover} from "../pages/tips/tips-popover";
     TipsPage,
     TipdayModal,
     TipsPopover,
+    TipArchiveModal,
     TabsPage
   ],
   providers: [

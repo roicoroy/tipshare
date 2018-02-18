@@ -68,6 +68,15 @@ export class TipLog {
     let index = _.findIndex(this._waiterLog, {logDate: date});
     this._waiterLog.splice(index, 1, update);
   }
+
+  get weeklyReport() {
+    let reports = [];
+    _.forEach(this._waiterLog, log => {
+      let report = { _logDate: log.logDate, log: log.waiterShares};
+      reports.push(report);
+    });
+    return reports;
+  }
 }
 
 export class WaiterLog {
@@ -76,13 +85,13 @@ export class WaiterLog {
   @Transform(value => moment(value), { toClassOnly: true })
   private _logDate: Moment;
 
-  private _log: Array<{ waiter: Waiter, points: number, hours: number, tips: number }>;
+  private _log: Array<{ waiter: Waiter, points: number, hours: number, tips: number}>;
 
 
   constructor(logDate: Moment, waiters: Array<Waiter>) {
     let emptyLogs = [];
     _.forEach(waiters, w => {
-      emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w });
+      emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w});
     });
     this._log = emptyLogs;
     this._logDate = logDate;
@@ -96,12 +105,18 @@ export class WaiterLog {
     return this._log;
   }
 
-  get logDateMs() : number {
-    return this._logDate.valueOf();
-  }
-
   get howManyWaiters() : number {
     return this._log.length;
+  }
+
+  get getTotalPoints() : number {
+    let total = 0;
+    _.forEach(this._log, d => {
+      if(d.hours > 0) {
+        total += +d.points;
+      }
+    });
+    return total;
   }
 
   get getTotalTips() : number {
@@ -111,5 +126,30 @@ export class WaiterLog {
     });
     return total;
   }
+  get getTotalHours() : number {
+    let total = 0;
+    _.forEach(this._log, d => {
+      if(d.hours > 0) {
+        total += +d.hours;
+      }
+    });
+    return total;
+  }
+
+  get dailyTipRate(): number {
+    return this.getTotalTips / (this.getTotalHours + this.getTotalPoints);
+  }
+
+  get waiterShares() {
+    let shares = [];
+    _.forEach(this._log, log => {
+      if(log.hours > 0) {
+        log.share = this.dailyTipRate * (+log.hours + +log.points);
+        shares.push(log);
+      }
+    });
+    return shares;
+  }
+
 
 }

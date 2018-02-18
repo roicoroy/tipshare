@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ModalController, PopoverController} from 'ionic-angular';
+import {AlertController, ModalController, PopoverController} from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from "moment";
 import {Moment} from "moment";
@@ -9,6 +9,7 @@ import {TipLog, WaiterLog} from "../../models/tiplog.model";
 import {ErrorService} from "../../services/error.service";
 import {TipdayModal} from "./tipday-modal";
 import {TipsPopover} from "./tips-popover";
+import {TipArchiveModal} from "./tip-archive-modal";
 
 @Component({
   selector: 'page-tips',
@@ -23,9 +24,11 @@ export class TipsPage {
 
   constructor(public modalController: ModalController,
               public popoverController: PopoverController,
+              public alertController: AlertController,
               private tipService: TipService,
               private waiterService: WaiterService,
               private errorService: ErrorService ) {
+    this.showArchive = true;
     this.checkForOpenCycle();
   }
 
@@ -41,6 +44,7 @@ export class TipsPage {
       // See if there is an open log
       let openLog = _.find(this.tipLogData, {archived: false});
       if (openLog) {
+        this.showArchive = false;
         // Yep = bind to view
         this.tipLog = openLog;
       }
@@ -50,9 +54,9 @@ export class TipsPage {
   }
 
   public createNewCycle(controlDate: any) {
+    this.showArchive = false;
     if(controlDate) {
       let date = this.ionicDateToMoment(controlDate);
-
       if(_.find(this.tipLogData, {cycleDateDay: date.startOf('day')})) {
         this.errorService.handleError(new Error('Cycle already open for this date. Check archives.'));
       } else {
@@ -80,6 +84,7 @@ export class TipsPage {
     this.tipLogData.push(this.tipLog);
     this.tipLog = null;
     this.cycleDateControl = null;
+    this.showArchive = true;
     this.save();
   }
 
@@ -90,18 +95,15 @@ export class TipsPage {
     editDayModal.onDidDismiss(editedLog => {
       if(editedLog) {
         this.tipLog.updateDay(day.logDate, editedLog);
+        console.log(JSON.stringify(this.tipLog.weeklyReport));
         this.save();
       }
     });
     editDayModal.present();
   }
 
-  public toggleArchive() {
-    this.showArchive = !this.showArchive;
-  }
-
   public presentPopover(myEvent) {
-    let popover = this.popoverController.create(TipsPopover);
+    let popover = this.popoverController.create(TipsPopover, { open: this.showArchive });
     popover.present({
       ev: myEvent
     });
@@ -115,12 +117,18 @@ export class TipsPage {
           }
           case 'refreshWaiters' : {
             console.log('Refresh waiters from DB');
+            this.errorService.handleError(new Error('This service is not yet implemented. Coming Soon'));
             //TODO
             break;
           }
           case 'refreshPoints' : {
             console.log('Refresh Points from DB');
+            this.errorService.handleError(new Error('This service is not yet implemented. Coming Soon'));
             //TODO
+            break;
+          }
+          case 'open' : {
+            this.selectArchive();
             break;
           }
           default : {
@@ -129,5 +137,19 @@ export class TipsPage {
         }
       }
     });
+  }
+
+  public selectArchive() {
+    let selectArchiveModal = this.modalController.create(TipArchiveModal, { data: this.tipLogData });
+
+    selectArchiveModal.onDidDismiss(tipLog => {
+      if(tipLog) {
+        tipLog.archived = false;
+        this.tipLog = tipLog;
+        this.showArchive = false;
+        this.save();
+      }
+    });
+    selectArchiveModal.present();
   }
 }

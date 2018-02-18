@@ -15,19 +15,19 @@
 </ion-header>
 <ion-content>
   <ion-card *ngFor="let item of day.log; let i = index; trackBy:trackByIndex;">
-    <ion-card-header style="background-color: #488aff;">
+    <ion-card-header style="background-color: #f4f4f4;">
       <ion-row>
         <ion-col col-8>{{ item.waiter._firstName + ' ' +  item.waiter._lastName }}</ion-col>
-        <ion-col><ion-badge color="light" float-end>{{ item.points }} points</ion-badge></ion-col>
+        <ion-col><ion-badge color="dark" float-end>{{ item.points }} points</ion-badge></ion-col>
       </ion-row>
     </ion-card-header>
     <ion-card-content>
         <ion-item>
-          <ion-label color="primary">Hours</ion-label>
+          <ion-label color="dark">Hours</ion-label>
           <ion-input placeholder="7" [(ngModel)]="day.log[i].hours"></ion-input>
         </ion-item>
         <ion-item>
-          <ion-label color="primary">Tips</ion-label>
+          <ion-label color="dark">Tips</ion-label>
           <ion-input placeholder="123.50" [(ngModel)]="day.log[i].tips"></ion-input>
         </ion-item>
     </ion-card-content>

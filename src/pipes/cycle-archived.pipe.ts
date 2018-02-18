@@ -9,8 +9,8 @@ export class CycleArchivedPipe implements PipeTransform {
       if(items == null) {
         return [];
       }
-
-      return _.filter(items, {archived: true});
+      let filtered = _.filter(items, {archived: true});
+      return _.sortBy(filtered, (f) => { return f.cycleDate })
 
   }
 }

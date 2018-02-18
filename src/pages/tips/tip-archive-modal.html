@@ -1,0 +1,16 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Archives</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="close()">
+        <ion-icon name='close'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+      <ion-item *ngFor="let log of data | archivedItems"
+      (click)="unarchive(log)">{{ log.cycleDate | amDateFormat:'ddd, D MMM YYYY'}}</ion-item>
+  </ion-list>
+</ion-content>
