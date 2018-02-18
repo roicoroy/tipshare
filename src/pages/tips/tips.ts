@@ -10,6 +10,7 @@ import {ErrorService} from "../../services/error.service";
 import {TipdayModal} from "./tipday-modal";
 import {TipsPopover} from "./tips-popover";
 import {TipArchiveModal} from "./tip-archive-modal";
+import {Waiter} from "../../models/waiter.model";
 
 @Component({
   selector: 'page-tips',
@@ -95,7 +96,7 @@ export class TipsPage {
     editDayModal.onDidDismiss(editedLog => {
       if(editedLog) {
         this.tipLog.updateDay(day.logDate, editedLog);
-        console.log(JSON.stringify(this.tipLog.weeklyReport));
+        console.log(this.tipLog.weeklyReport());
         this.save();
       }
     });

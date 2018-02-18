@@ -17,7 +17,7 @@
   <ion-card *ngFor="let item of day.log; let i = index; trackBy:trackByIndex;">
     <ion-card-header style="background-color: #f4f4f4;">
       <ion-row>
-        <ion-col col-8>{{ item.waiter._firstName + ' ' +  item.waiter._lastName }}</ion-col>
+        <ion-col col-8>{{ item.waiter.firstName + ' ' +  item.waiter.lastName }}</ion-col>
         <ion-col><ion-badge color="dark" float-end>{{ item.points }} points</ion-badge></ion-col>
       </ion-row>
     </ion-card-header>

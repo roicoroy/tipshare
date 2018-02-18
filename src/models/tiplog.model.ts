@@ -2,8 +2,9 @@ import {Moment} from "moment";
 import {Waiter} from "./waiter.model";
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Transform, Type} from "class-transformer";
+import {plainToClass, Transform, Type} from "class-transformer";
 import {UUID} from "angular2-uuid";
+import {listLazyRoutes} from "@angular/compiler/src/aot/lazy_routes";
 
 export class TipLog {
   private _id: UUID;
@@ -16,7 +17,7 @@ export class TipLog {
   private _archived: boolean;
 
   @Type(() => WaiterLog)
-  private _waiterLog: Array<WaiterLog>;
+  private _waiterLog: WaiterLog[];
 
   constructor(cycleDate: Moment,
               archived: boolean,
@@ -69,14 +70,55 @@ export class TipLog {
     this._waiterLog.splice(index, 1, update);
   }
 
-  get weeklyReport() {
-    let reports = [];
-    _.forEach(this._waiterLog, log => {
-      let report = { _logDate: log.logDate, log: log.waiterShares};
-      reports.push(report);
+  public weeklyReport() {
+    let waiters: Waiter[] = [];
+    _.forEach(this._waiterLog, day => {
+      _.forEach(day.log, log => {
+          waiters.push(log.waiter);
+      });
     });
-    return reports;
+
+    let deduped = _.map(
+      _.uniq(
+        _.map(waiters, function(obj){
+          return JSON.stringify(obj);
+        })
+      ), function(obj) {
+        return JSON.parse(obj);
+      }
+    );
+
+    let report = [];
+    _.forEach(deduped, item => {
+      report.push(this.waiterReport(item));
+    });
+    return report;
   }
+
+  public waiterReport(waiter: Waiter) {
+    let report = { waiter: waiter,
+      tips: 0,
+      hours: 0,
+      share: 0,
+      log: []
+    };
+    _.forEach(this._waiterLog, day => {
+      let matchedWaiter = _.find(day.log, { waiter: waiter});
+      if(matchedWaiter.hours > 0) {
+        report.tips += +matchedWaiter.tips;
+        report.hours += +matchedWaiter.hours;
+        report.share = report.share + +day.getWaiterShare(waiter);
+        report.log.push({
+          date: day.logDate,
+          tips: matchedWaiter.tips,
+          hours: matchedWaiter.hours,
+          share: day.getWaiterShare(waiter)
+        });
+      }
+    });
+    return report;
+  }
+
 }
 
 export class WaiterLog {
@@ -85,13 +127,13 @@ export class WaiterLog {
   @Transform(value => moment(value), { toClassOnly: true })
   private _logDate: Moment;
 
-  private _log: Array<{ waiter: Waiter, points: number, hours: number, tips: number}>;
-
+  @Type(() => Log)
+  private _log: Log[];
 
   constructor(logDate: Moment, waiters: Array<Waiter>) {
     let emptyLogs = [];
     _.forEach(waiters, w => {
-      emptyLogs.push({ points: w.criteriaPoints, hours: 0, tips: 0, waiter: w});
+      emptyLogs.push(new Log(w, w.criteriaPoints,0,0));
     });
     this._log = emptyLogs;
     this._logDate = logDate;
@@ -101,7 +143,7 @@ export class WaiterLog {
     return this._logDate;
   }
 
-  get log(): Array<{ waiter: Waiter; points: number; hours: number; tips: number }> {
+  get log(): Array<Log> {
     return this._log;
   }
 
@@ -140,16 +182,56 @@ export class WaiterLog {
     return this.getTotalTips / (this.getTotalHours + this.getTotalPoints);
   }
 
-  get waiterShares() {
-    let shares = [];
-    _.forEach(this._log, log => {
-      if(log.hours > 0) {
-        log.share = this.dailyTipRate * (+log.hours + +log.points);
-        shares.push(log);
-      }
-    });
-    return shares;
+  public getWaiterShare(waiter: Waiter) : number {
+    let log = _.find(this._log, { _waiter: waiter });
+    return this.dailyTipRate * (+log.points + +log.hours);
+  }
+}
+
+export class Log {
+  @Type(() => Waiter)
+  private _waiter: Waiter;
+
+  private _points: number;
+  private _hours: number;
+  private _tips: number;
+
+  constructor(waiter: Waiter, points: number, hours: number, tips: number) {
+    this._waiter = waiter;
+    this._points = points;
+    this._hours = hours;
+    this._tips = tips;
   }
 
+  get waiter(): Waiter {
+    return this._waiter;
+  }
 
+  set waiter(value: Waiter) {
+    this._waiter = value;
+  }
+
+  get points(): number {
+    return this._points;
+  }
+
+  set points(value: number) {
+    this._points = value;
+  }
+
+  get hours(): number {
+    return this._hours;
+  }
+
+  set hours(value: number) {
+    this._hours = value;
+  }
+
+  get tips(): number {
+    return this._tips;
+  }
+
+  set tips(value: number) {
+    this._tips = value;
+  }
 }
