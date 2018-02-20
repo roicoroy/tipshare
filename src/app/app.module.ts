@@ -25,11 +25,13 @@ import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
 import {TipdayModal} from "../pages/tips/tipday-modal";
 import {TipsPopover} from "../pages/tips/tips-popover";
 import {TipArchiveModal} from "../pages/tips/tip-archive-modal";
+import { SharingPopover } from '../pages/sharing/sharing-popover';
 
 @NgModule({
   declarations: [
     MyApp,
     SharingPage,
+    SharingPopover,
     SettingsPage,
     CriteriaPage,
     CriteriaEntryPage,
@@ -55,6 +57,7 @@ import {TipArchiveModal} from "../pages/tips/tip-archive-modal";
   entryComponents: [
     MyApp,
     SharingPage,
+    SharingPopover,
     SettingsPage,
     WaitersPage,
     WaiterEntryPage,

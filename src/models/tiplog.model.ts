@@ -2,7 +2,7 @@ import {Moment} from "moment";
 import {Waiter} from "./waiter.model";
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import {Transform, Type} from "class-transformer";
+import {Transform, Type, plainToClass} from "class-transformer";
 import {UUID} from "angular2-uuid";
 
 export class TipLog {
@@ -86,9 +86,10 @@ export class TipLog {
         return JSON.parse(obj);
       }
     );
-
+ 
     let report = [];
-    _.forEach(deduped, item => {
+    let typed = plainToClass(Waiter, deduped);
+    _.forEach(typed, item => {
       report.push(this.waiterReport(item));
     });
     return report;
@@ -132,7 +133,7 @@ export class WaiterLog {
   constructor(logDate: Moment, waiters: Array<Waiter>) {
     let emptyLogs = [];
     _.forEach(waiters, w => {
-      emptyLogs.push(new Log(w, w.criteriaPoints,0,0));
+      emptyLogs.push(new Log(w, w.criteriaPoints,10,10));
     });
     this._log = emptyLogs;
     this._logDate = logDate;

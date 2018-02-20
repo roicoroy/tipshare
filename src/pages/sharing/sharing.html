@@ -1,11 +1,48 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About
+      Sharing Reports
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="presentPopover($event)">
+        <ion-icon name="more"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
+  <ion-item ion-fixed>
+    Waiter Name
+      <ion-badge color="dark" item-end (click)="sortBy('hours')">Hours</ion-badge>
+      <ion-badge color="default" item-end (click)="sortBy('tips')">Tips</ion-badge>
+      <ion-badge color="secondary" item-end (click)="sortBy('share')">Share</ion-badge>
+  </ion-item>
 </ion-header>
 
-<ion-content padding>
-
+<ion-content>
+    <ion-list class="accordion-list">
+        <!-- First Level -->
+        <ion-list-header *ngFor="let report of weeklyReport; let i = index" no-lines no-padding
+          style="margin-bottom: 0px;">
+          <!-- Toggle Button -->
+          <button ion-item (click)="toggleSection(i)" detail-none 
+            [ngClass]="{'section-active': report.open, 'section': !report.open}">
+            <ion-icon item-left name="arrow-forward" *ngIf="!report.open"></ion-icon>
+            <ion-icon item-left name="arrow-down" *ngIf="report.open"></ion-icon>
+              {{report.waiter.firstName}} {{report.waiter.lastName}}
+            <ion-badge color="dark" item-end outline>{{ report.hours }}</ion-badge>
+            <ion-badge color="default" item-end>£{{report.tips | number : '1.2-2'}}</ion-badge>
+            <ion-badge color="secondary" item-end>£{{report.share | number : '1.2-2'}}</ion-badge>
+          </button>
+          <ion-list *ngIf="report.log && report.open" style="margin-bottom: 0px;">
+            <!-- Third Level -->
+            <ion-item *ngFor="let log of report.log; let k = index" detail-none class="child-item" text-wrap>
+              <h2>{{log.date | amDateFormat: 'dddd'}}</h2>
+              <!-- Direct Add Button -->
+              <ion-badge color="dark" item-end outline>{{ log.hours }}</ion-badge>
+              <ion-badge color="default" item-end>£{{log.tips | number : '1.2-2'}}</ion-badge>
+              <ion-badge color="secondary" item-end>£{{log.share | number : '1.2-2'}}</ion-badge>
+            </ion-item>
+          </ion-list>
+          <hr *ngIf="!report.open" style="margin: 0px;">
+        </ion-list-header>
+      </ion-list>
 </ion-content>
