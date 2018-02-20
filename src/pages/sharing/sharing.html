@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Sharing for {{tipLog?.cycleDateDay | amDateFormat: 'ddd, DD-MM-YYYY'}}
+      Sharing Reports
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="presentPopover($event)">
@@ -11,9 +11,9 @@
   </ion-navbar>
   <ion-item ion-fixed>
     Waiter Name
-      <ion-badge color="dark" item-end>Hours</ion-badge>
-      <ion-badge color="default" item-end>Tips</ion-badge>
-      <ion-badge color="secondary" item-end>Share</ion-badge>
+      <ion-badge color="dark" item-end (click)="sortBy('hours')">Hours</ion-badge>
+      <ion-badge color="default" item-end (click)="sortBy('tips')">Tips</ion-badge>
+      <ion-badge color="secondary" item-end (click)="sortBy('share')">Share</ion-badge>
   </ion-item>
 </ion-header>
 

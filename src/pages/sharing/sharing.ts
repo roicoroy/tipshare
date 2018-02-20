@@ -4,7 +4,9 @@ import { TipService } from '../../services/tip.service';
 import { TipLog } from '../../models/tiplog.model';
 import * as _ from 'lodash';
 import { ErrorService } from '../../services/error.service';
-import { Waiter } from '../../models/waiter.model';
+import { PopoverController } from 'ionic-angular/components/popover/popover-controller';
+import { SharingPopover } from './sharing-popover';
+import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
 @Component({
   selector: 'page-sharing',
@@ -15,11 +17,16 @@ export class SharingPage {
   private tipLog: TipLog;
   private weeklyReport;
   private selectedReport;
-
+  private lastSort: {
+    field: string, 
+    asc: boolean
+  };
 
   constructor(public navCtrl: NavController
       , private tipService: TipService
-      , private errorService: ErrorService) {
+      , private errorService: ErrorService
+      , private popoverController: PopoverController) {
+    this.lastSort = {field:'', asc: true};
   }
 
   private checkForOpenCycle() {
@@ -37,17 +44,57 @@ export class SharingPage {
     });
   }
 
-  public reportSelected(report) {
-    if(report == this.selectedReport) {
-      //Deselect waiter
-      this.selectedReport = null;
+  public sortBy(field: string) {
+    let direction: string;
+    this.lastSort.field = field;
+    if(this.lastSort.field == field && this.lastSort.asc) {
+      direction = 'desc';
+      this.lastSort.asc = false;
     } else {
-      this.selectedReport = report;
+      direction = 'asc';
+      this.lastSort.asc = true;
     }
+    this.weeklyReport = _.orderBy(this.weeklyReport, [field], [direction]);
+  }
+
+  public presentPopover(myEvent) {
+    let popover = this.popoverController.create(SharingPopover);
+    popover.present({
+      ev: myEvent
+    });
+    popover.onDidDismiss(resulting => {
+      if(resulting) {
+        switch(resulting.action) {
+          case 'expandAll' : {
+            this.expandAll();
+            break;
+          }
+          case 'collapseAll' : {
+            this.collapseAll();
+            break;
+          }
+          default : {
+            break;
+          }
+        }
+      }
+    });
   }
 
   public toggleSection(i) {
     this.weeklyReport[i].open = !this.weeklyReport[i].open;
+  }
+
+  private expandAll() {
+    for (let report of this.weeklyReport) {
+      report.open = true;        
+    }
+  }
+
+  private collapseAll() {
+    for(let report of this.weeklyReport) {
+      report.open = false;
+    }
   }
  
   public toggleItem(i, j) {
