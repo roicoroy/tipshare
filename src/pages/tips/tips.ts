@@ -1,16 +1,15 @@
 import {Component} from '@angular/core';
-import {AlertController, ModalController, PopoverController} from 'ionic-angular';
+import {ModalController, PopoverController} from 'ionic-angular';
 import * as _ from 'lodash';
 import * as moment from "moment";
 import {Moment} from "moment";
 import {WaiterService} from "../../services/waiter.service";
 import {TipService} from "../../services/tip.service";
-import {TipLog, WaiterLog} from "../../models/tiplog.model";
+import {TipLog} from "../../models/tiplog.model";
 import {ErrorService} from "../../services/error.service";
 import {TipdayModal} from "./tipday-modal";
 import {TipsPopover} from "./tips-popover";
 import {TipArchiveModal} from "./tip-archive-modal";
-import {Waiter} from "../../models/waiter.model";
 
 @Component({
   selector: 'page-tips',
@@ -25,7 +24,6 @@ export class TipsPage {
 
   constructor(public modalController: ModalController,
               public popoverController: PopoverController,
-              public alertController: AlertController,
               private tipService: TipService,
               private waiterService: WaiterService,
               private errorService: ErrorService ) {
@@ -96,7 +94,6 @@ export class TipsPage {
     editDayModal.onDidDismiss(editedLog => {
       if(editedLog) {
         this.tipLog.updateDay(day.logDate, editedLog);
-        console.log(this.tipLog.weeklyReport());
         this.save();
       }
     });
@@ -114,18 +111,6 @@ export class TipsPage {
         switch(resulting.action) {
           case 'archive' : {
             this.archiveCycle();
-            break;
-          }
-          case 'refreshWaiters' : {
-            console.log('Refresh waiters from DB');
-            this.errorService.handleError(new Error('This service is not yet implemented. Coming Soon'));
-            //TODO
-            break;
-          }
-          case 'refreshPoints' : {
-            console.log('Refresh Points from DB');
-            this.errorService.handleError(new Error('This service is not yet implemented. Coming Soon'));
-            //TODO
             break;
           }
           case 'open' : {

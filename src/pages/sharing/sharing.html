@@ -1,7 +1,7 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Sharing Reports
+      Sharing Report
     </ion-title>
     <ion-buttons end>
       <button ion-button icon-only (click)="presentPopover($event)">
@@ -9,8 +9,9 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-  <ion-item ion-fixed>
-    Waiter Name
+  <ion-item ion-fixed no-lines>
+    <ion-icon name="calendar" padding-right></ion-icon>
+  {{ tipLog?.cycleDate | amDateFormat: 'DD/MM/YY'}} - {{ tipLog?.cycleDate.add(6, 'days') | amDateFormat: 'DD/MM/YY'}}
       <ion-badge color="dark" item-end (click)="sortBy('hours')">Hours</ion-badge>
       <ion-badge color="default" item-end (click)="sortBy('tips')">Tips</ion-badge>
       <ion-badge color="secondary" item-end (click)="sortBy('share')">Share</ion-badge>
@@ -23,7 +24,7 @@
         <ion-list-header *ngFor="let report of weeklyReport; let i = index" no-lines no-padding
           style="margin-bottom: 0px;">
           <!-- Toggle Button -->
-          <button ion-item (click)="toggleSection(i)" detail-none 
+          <button ion-item (click)="toggleSection(i)" detail-none
             [ngClass]="{'section-active': report.open, 'section': !report.open}">
             <ion-icon item-left name="arrow-forward" *ngIf="!report.open"></ion-icon>
             <ion-icon item-left name="arrow-down" *ngIf="report.open"></ion-icon>

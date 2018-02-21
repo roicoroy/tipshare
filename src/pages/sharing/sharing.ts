@@ -6,7 +6,6 @@ import * as _ from 'lodash';
 import { ErrorService } from '../../services/error.service';
 import { PopoverController } from 'ionic-angular/components/popover/popover-controller';
 import { SharingPopover } from './sharing-popover';
-import { PACKAGE_ROOT_URL } from '@angular/core/src/application_tokens';
 
 @Component({
   selector: 'page-sharing',
@@ -16,9 +15,8 @@ export class SharingPage {
 
   private tipLog: TipLog;
   private weeklyReport;
-  private selectedReport;
   private lastSort: {
-    field: string, 
+    field: string,
     asc: boolean
   };
 
@@ -87,7 +85,7 @@ export class SharingPage {
 
   private expandAll() {
     for (let report of this.weeklyReport) {
-      report.open = true;        
+      report.open = true;
     }
   }
 
@@ -96,7 +94,7 @@ export class SharingPage {
       report.open = false;
     }
   }
- 
+
   public toggleItem(i, j) {
     this.weeklyReport[i].children[j].open = !this.weeklyReport[i].children[j].open;
   }
