@@ -86,7 +86,7 @@ export class TipLog {
         return JSON.parse(obj);
       }
     );
- 
+
     let report = [];
     let typed = plainToClass(Waiter, deduped);
     _.forEach(typed, item => {
@@ -133,7 +133,7 @@ export class WaiterLog {
   constructor(logDate: Moment, waiters: Array<Waiter>) {
     let emptyLogs = [];
     _.forEach(waiters, w => {
-      emptyLogs.push(new Log(w, w.criteriaPoints,10,10));
+      emptyLogs.push(new Log(w, w.criteriaPoints,0,0));
     });
     this._log = emptyLogs;
     this._logDate = logDate;
