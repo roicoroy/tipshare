@@ -22,17 +22,25 @@ import {ErrorService} from "../services/error.service";
 import {TipService} from "../services/tip.service";
 import {IonicStorageModule} from "@ionic/storage";
 import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
+import {TipdayModal} from "../pages/tips/tipday-modal";
+import {TipsPopover} from "../pages/tips/tips-popover";
+import {TipArchiveModal} from "../pages/tips/tip-archive-modal";
+import { SharingPopover } from '../pages/sharing/sharing-popover';
 
 @NgModule({
   declarations: [
     MyApp,
     SharingPage,
+    SharingPopover,
     SettingsPage,
     CriteriaPage,
     CriteriaEntryPage,
     WaitersPage,
     WaiterEntryPage,
     TipsPage,
+    TipdayModal,
+    TipsPopover,
+    TipArchiveModal,
     TabsPage,
     CycleArchivedPipe
   ],
@@ -49,12 +57,16 @@ import {CycleArchivedPipe} from "../pipes/cycle-archived.pipe";
   entryComponents: [
     MyApp,
     SharingPage,
+    SharingPopover,
     SettingsPage,
     WaitersPage,
     WaiterEntryPage,
     CriteriaPage,
     CriteriaEntryPage,
     TipsPage,
+    TipdayModal,
+    TipsPopover,
+    TipArchiveModal,
     TabsPage
   ],
   providers: [

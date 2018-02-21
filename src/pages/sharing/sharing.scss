@@ -1,3 +1,25 @@
 page-sharing {
-
+    .accordion-list {
+        height: 100%;
+    }
+    .section {
+        background: #fff;
+        color: #000;
+    }
+    .section-active {
+        background: #6aa0fd;
+        color: #fff;
+    }
+    
+    .child {
+        background: #e8e7e6;
+        color: #000;
+    }
+    .child-item {
+        background: #f3f2f1;
+    }
+    .label {
+        margin: 0px;
+    }
 }
+

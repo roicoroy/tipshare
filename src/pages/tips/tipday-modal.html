@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>{{ day.logDate | amDateFormat:'ddd, D MMM YYYY'}}</ion-title>
+    <ion-buttons start>
+      <button ion-button icon-only (click)="close()">
+        <ion-icon name='close'></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="save()">
+        <ion-icon name='checkmark'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+<ion-content>
+  <ion-card *ngFor="let item of day.log; let i = index; trackBy:trackByIndex;">
+    <ion-card-header style="background-color: #f4f4f4;">
+      <ion-row>
+        <ion-col col-8>{{ item.waiter.firstName + ' ' +  item.waiter.lastName }}</ion-col>
+        <ion-col><ion-badge color="dark" float-end>{{ item.points }} points</ion-badge></ion-col>
+      </ion-row>
+    </ion-card-header>
+    <ion-card-content>
+        <ion-item>
+          <ion-label color="dark">Hours</ion-label>
+          <ion-input placeholder="7" [(ngModel)]="day.log[i].hours"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label color="dark">Tips</ion-label>
+          <ion-input placeholder="123.50" [(ngModel)]="day.log[i].tips"></ion-input>
+        </ion-item>
+    </ion-card-content>
+
+
+  </ion-card>
+</ion-content>
