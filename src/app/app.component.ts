@@ -15,9 +15,10 @@ export class MyApp {
               statusBar: StatusBar,
               splashScreen: SplashScreen,
              ) {
+    splashScreen.show();
     platform.ready().then(() => {
       statusBar.styleDefault();
-      splashScreen.hide();
+     // splashScreen.hide();
     });
   }
 }

@@ -1,0 +1,11 @@
+//Background
+$background-wp-color: color($colors, washout);
+
+//Tabs
+$tabs-wp-tab-icon-color: color($colors, lightgreen);
+$tabs-wp-tab-text-color: color($colors, lightgreen);
+
+//Tabs active
+$tabs-wp-tab-text-color-active: color($colors, vividgreen);
+$tabs-wp-tab-color-active: color($colors, vividgreen);
+$tabs-wp-tab-icon-color-active: color($colors, vividgreen);
