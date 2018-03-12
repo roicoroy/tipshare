@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {NavParams, ViewController} from "ionic-angular";
 import {WaiterLog} from "../../models/tiplog.model";
+import * as _ from 'lodash';
 
 @Component({
   selector: 'page-tipday-modal',
@@ -9,6 +10,8 @@ import {WaiterLog} from "../../models/tiplog.model";
 export class TipdayModal {
 
   day: WaiterLog;
+  asTotal: boolean = false;
+  total:number = 0;
 
   constructor(public view: ViewController,
               private navParams: NavParams) {
@@ -26,5 +29,12 @@ export class TipdayModal {
   public trackByIndex(index: number, value: number) {
     return index;
   }
+
+  public split() {
+   this.day.log.forEach(log => {
+     log.tips = Math.round((this.total / this.day.howManyWaiters) * 100) / 100;
+   });
+  }
+
 
 }

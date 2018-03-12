@@ -14,6 +14,18 @@
   </ion-navbar>
 </ion-header>
 <ion-content>
+  <ion-list>
+    <ion-item>
+      <ion-label>Enter as total</ion-label>
+      <ion-toggle [(ngModel)]="asTotal"></ion-toggle>
+    </ion-item>
+    <ion-item *ngIf="asTotal">
+      <ion-label>Total tips</ion-label>
+      <ion-input type="number" [(ngModel)]="total" (ionChange)="split()"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ng-container>
   <ion-card *ngFor="let item of day.log; let i = index; trackBy:trackByIndex;">
     <ion-card-header style="background-color: #f4f4f4;">
       <ion-row>
@@ -34,4 +46,5 @@
 
 
   </ion-card>
+  </ng-container>
 </ion-content>
