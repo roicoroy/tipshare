@@ -9,6 +9,7 @@ export class TipService {
 
   constructor(public storage: Storage) {}
 
+  
   public get() : Observable<Array<TipLog>> {
     return Observable.create(observer => {
       this.storage.get('tips')
